@@ -10,11 +10,13 @@ function PZRolePlayingShared.log(module, message)
 end
 
 local NOW_SOURCE = nil
+local MAX_PERK_ADJUST_STEPS = 20
 
 local ROLE_CARRY_CAPACITY = {
     builder = 90,
     demolisseur = 60,
     invincible = 90,
+    mule = 80,
     rambo = 60,
     samourai = 60,
 }
@@ -115,24 +117,43 @@ function PZRolePlayingShared.buildItemCounts(items)
 end
 
 function PZRolePlayingShared.addRoleItems(inv, bagItem, bagItemId, items, bagContents)
-    if inv == nil or items == nil then return end
+    if inv == nil then return end
+
     local bagContainer = bagItem and bagItem:getItemContainer() or nil
+    local itemCounts = PZRolePlayingShared.buildItemCounts(items)
     local bagCounts = PZRolePlayingShared.buildItemCounts(bagContents)
-    for _, itemDef in ipairs(items) do
+    local processed = {}
+
+    local function addDistributedItem(itemId, totalCount)
+        if itemId == nil or itemId == bagItemId or totalCount == nil or totalCount <= 0 then return end
+
+        local desiredBagCount = 0
+        if bagContainer ~= nil then
+            desiredBagCount = bagCounts[itemId] or 0
+        end
+
+        local bagCount = math.min(totalCount, desiredBagCount)
+        local invCount = totalCount - bagCount
+
+        if invCount > 1 then
+            inv:AddItems(itemId, invCount)
+        elseif invCount == 1 then
+            inv:AddItem(itemId)
+        end
+
+        PZRolePlayingShared.addItemsToContainer(bagContainer, itemId, bagCount)
+        processed[itemId] = true
+    end
+
+    for _, itemDef in ipairs(items or {}) do
         local itemId = itemDef[1]
-        local totalCount = itemDef[2] or 1
-        if itemId ~= bagItemId then
-            local bagCount = 0
-            if bagContainer ~= nil and bagCounts[itemId] ~= nil then
-                bagCount = math.min(totalCount, bagCounts[itemId])
-            end
-            local invCount = totalCount - bagCount
-            if invCount > 1 then
-                inv:AddItems(itemId, invCount)
-            elseif invCount == 1 then
-                inv:AddItem(itemId)
-            end
-            PZRolePlayingShared.addItemsToContainer(bagContainer, itemId, bagCount)
+        local totalCount = math.max(itemDef[2] or 1, bagCounts[itemId] or 0)
+        addDistributedItem(itemId, totalCount)
+    end
+
+    for itemId, bagCount in pairs(bagCounts) do
+        if not processed[itemId] then
+            addDistributedItem(itemId, bagCount)
         end
     end
 end
@@ -166,7 +187,9 @@ function PZRolePlayingShared.applyPerkLevel(player, perk, level)
     if player.getPerkLevel ~= nil then
         local currentLevel = player:getPerkLevel(perk)
         if currentLevel ~= nil and player.LevelPerk ~= nil then
-            while currentLevel < level do
+            local safety = MAX_PERK_ADJUST_STEPS
+            while currentLevel < level and safety > 0 do
+                safety = safety - 1
                 player:LevelPerk(perk, false)
                 local newLevel = player:getPerkLevel(perk)
                 if newLevel == nil or newLevel <= currentLevel then break end
@@ -174,7 +197,9 @@ function PZRolePlayingShared.applyPerkLevel(player, perk, level)
             end
         end
         if currentLevel ~= nil and player.LoseLevel ~= nil then
-            while currentLevel > level do
+            local safety = MAX_PERK_ADJUST_STEPS
+            while currentLevel > level and safety > 0 do
+                safety = safety - 1
                 player:LoseLevel(perk)
                 local newLevel = player:getPerkLevel(perk)
                 if newLevel == nil or newLevel >= currentLevel then break end

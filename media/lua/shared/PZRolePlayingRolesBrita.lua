@@ -214,6 +214,7 @@ Roles.ROLE_DEFS = {
             {Perks.Strength, 5},
             {Perks.Fitness, 5},
             {Perks.SmallBlade, 9},
+            {Perks.Trapping, 3},
             {Perks.Sprinting, 3},
         },
         items = {
@@ -316,7 +317,6 @@ Roles.ROLE_DEFS = {
             {Perks.Carpentry, 3},
             {Perks.Trapping, 3},
             {Perks.Nimble, 9},
-            {Perks.Sneak, 6},
         },
         items = {
             {"Base.M40A3", 1},
