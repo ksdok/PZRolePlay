@@ -1,0 +1,6 @@
+name=PZRolePlaying
+id=PZRolePlaying
+version=0.1.0
+description=Standalone role picker for Project Zomboid. Choose a role at spawn and receive its loadout. Vanilla roles by default, Brita roles if Brita/Arsenal are installed.
+poster=poster.png
+author=Kim
