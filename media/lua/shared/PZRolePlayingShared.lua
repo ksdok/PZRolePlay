@@ -185,6 +185,10 @@ function PZRolePlayingShared.addRoleItems(inv, bagItem, bagItemId, items, bagCon
     local bagCounts = PZRolePlayingShared.buildItemCounts(bagContents)
     local processed = {}
 
+    -- Contrat actuel : `items` définit la quantité totale à créer pour chaque item.
+    -- `bagContents` ne définit que la répartition souhaitée dans le sac (bornée au total).
+    -- Si un item n'existe que dans `bagContents`, cette quantité devient alors le total créé.
+
     local function addDistributedItem(itemId, totalCount)
         if itemId == nil or itemId == bagItemId or totalCount == nil or totalCount <= 0 then return end
 
@@ -423,6 +427,7 @@ function PZRolePlayingShared.clearPlayerLoadout(player)
         if player.clearWornItems ~= nil then
             player:clearWornItems()
         elseif player.setWornItem ~= nil then
+            local locations = {}
             for i = 0, wornCount - 1 do
                 local entry = wornItems:get(i)
                 local location = entry ~= nil and entry.getLocation ~= nil and entry:getLocation() or nil
@@ -433,8 +438,11 @@ function PZRolePlayingShared.clearPlayerLoadout(player)
                     end
                 end
                 if location ~= nil and location ~= "" then
-                    player:setWornItem(location, nil)
+                    locations[#locations + 1] = location
                 end
+            end
+            for _, location in ipairs(locations) do
+                player:setWornItem(location, nil)
             end
         end
         if player.setClothingItem_Back ~= nil then
@@ -449,14 +457,19 @@ function PZRolePlayingShared.clearPlayerLoadout(player)
         cleaned = true
         if inv.clear ~= nil then
             inv:clear()
-        elseif inv.Remove ~= nil then
-            local snapshot = {}
-            for i = 0, itemCount - 1 do
-                snapshot[#snapshot + 1] = items:get(i)
-            end
-            for _, item in ipairs(snapshot) do
-                if item ~= nil then
-                    inv:Remove(item)
+        else
+            local removeItem = inv.Remove ~= nil and function(item) inv:Remove(item) end
+                or inv.remove ~= nil and function(item) inv:remove(item) end
+                or nil
+            if removeItem ~= nil then
+                local snapshot = {}
+                for i = 0, itemCount - 1 do
+                    snapshot[#snapshot + 1] = items:get(i)
+                end
+                for _, item in ipairs(snapshot) do
+                    if item ~= nil then
+                        removeItem(item)
+                    end
                 end
             end
         end
