@@ -8,6 +8,10 @@ if PZRolePlayingShared.VERBOSE_EQUIP_LOGS == nil then
     PZRolePlayingShared.VERBOSE_EQUIP_LOGS = false
 end
 
+if PZRolePlayingShared.DEBUG_TOOLS == nil then
+    PZRolePlayingShared.DEBUG_TOOLS = false
+end
+
 function PZRolePlayingShared.log(module, message)
     if PZRolePlayingShared.DEBUG ~= true then return end
     print("[PZRolePlaying][" .. tostring(module) .. "] " .. tostring(message))
@@ -15,6 +19,14 @@ end
 
 local NOW_SOURCE = nil
 local MAX_PERK_ADJUST_STEPS = 20
+local ROLE_PERK_UNION_CACHE = nil
+local ROLE_PERK_UNION_SOURCE = nil
+local CARRY_BASELINE = {
+    captured = false,
+    unlimitedCarry = false,
+    maxWeightBase = nil,
+    maxWeight = nil,
+}
 
 local ROLE_CARRY_CAPACITY = {
     builder = 90,
@@ -74,8 +86,25 @@ function PZRolePlayingShared.getNowSeconds()
     return 0
 end
 
+local function ensureCarryBaseline(player)
+    if player == nil or CARRY_BASELINE.captured then return end
+
+    CARRY_BASELINE.captured = true
+    if player.isUnlimitedCarry ~= nil then
+        CARRY_BASELINE.unlimitedCarry = player:isUnlimitedCarry() == true
+    end
+    if player.getMaxWeightBase ~= nil then
+        CARRY_BASELINE.maxWeightBase = player:getMaxWeightBase()
+    end
+    if player.getMaxWeight ~= nil then
+        CARRY_BASELINE.maxWeight = player:getMaxWeight()
+    end
+end
+
 function PZRolePlayingShared.applyCarryProfile(player, roleKey)
     if player == nil then return end
+
+    ensureCarryBaseline(player)
 
     local carryCapacity = ROLE_CARRY_CAPACITY[roleKey]
     local unlimitedCarry = carryCapacity ~= nil
@@ -103,6 +132,31 @@ function PZRolePlayingShared.applyCarryProfile(player, roleKey)
     if player.setMaxWeightDelta ~= nil then
         player:setMaxWeightDelta(0)
     end
+end
+
+function PZRolePlayingShared.resetCarryProfile(player)
+    if player == nil then return false end
+
+    ensureCarryBaseline(player)
+
+    local changed = false
+    if player.setUnlimitedCarry ~= nil then
+        player:setUnlimitedCarry(CARRY_BASELINE.unlimitedCarry == true)
+        changed = true
+    end
+    if CARRY_BASELINE.maxWeightBase ~= nil and player.setMaxWeightBase ~= nil then
+        player:setMaxWeightBase(CARRY_BASELINE.maxWeightBase)
+        changed = true
+    end
+    if CARRY_BASELINE.maxWeight ~= nil and player.setMaxWeight ~= nil then
+        player:setMaxWeight(CARRY_BASELINE.maxWeight)
+        changed = true
+    end
+    if player.setMaxWeightDelta ~= nil then
+        player:setMaxWeightDelta(0)
+    end
+
+    return changed
 end
 
 function PZRolePlayingShared.addItemsToContainer(container, itemId, count)
@@ -215,6 +269,51 @@ function PZRolePlayingShared.applyPerkLevel(player, perk, level)
     xp:setXPToLevel(perk, level)
 end
 
+function PZRolePlayingShared.buildRolePerkUnion(roleDefs)
+    local perkSet = {}
+    for _, def in pairs(roleDefs or {}) do
+        for _, skillDef in ipairs(def.skills or {}) do
+            local perk = skillDef[1]
+            if perk ~= nil then
+                perkSet[perk] = true
+            end
+        end
+    end
+    return perkSet
+end
+
+function PZRolePlayingShared.getRolePerkUnion()
+    if PZRolePlayingRoles == nil or PZRolePlayingRoles.getActiveRoleDefs == nil then
+        return {}
+    end
+
+    local defs = PZRolePlayingRoles.getActiveRoleDefs()
+    if defs == nil then
+        return {}
+    end
+
+    if defs ~= ROLE_PERK_UNION_SOURCE or ROLE_PERK_UNION_CACHE == nil then
+        ROLE_PERK_UNION_SOURCE = defs
+        ROLE_PERK_UNION_CACHE = PZRolePlayingShared.buildRolePerkUnion(defs)
+    end
+
+    return ROLE_PERK_UNION_CACHE
+end
+
+function PZRolePlayingShared.resetPlayerPerks(player, perkSet)
+    if player == nil or perkSet == nil then return false end
+
+    local changed = false
+    for perk, enabled in pairs(perkSet) do
+        if enabled and perk ~= nil then
+            PZRolePlayingShared.applyPerkLevel(player, perk, 0)
+            changed = true
+        end
+    end
+
+    return changed
+end
+
 function PZRolePlayingShared.applyManualTeleportState(player, x, y, z)
     player:setX(x)
     player:setY(y)
@@ -296,6 +395,74 @@ PZRolePlayingShared.fillAmmoItem = fillAmmoItem
 function PZRolePlayingShared.primeRoleLoadout(inv)
     if inv == nil then return end
     forEachContainerItemRecursive(inv, fillAmmoItem)
+end
+
+function PZRolePlayingShared.clearPlayerLoadout(player)
+    if player == nil then return false end
+
+    local cleaned = false
+
+    if player.getPrimaryHandItem ~= nil and player:getPrimaryHandItem() ~= nil and player.setPrimaryHandItem ~= nil then
+        player:setPrimaryHandItem(nil)
+        cleaned = true
+    elseif player.setPrimaryHandItem ~= nil then
+        player:setPrimaryHandItem(nil)
+    end
+
+    if player.getSecondaryHandItem ~= nil and player:getSecondaryHandItem() ~= nil and player.setSecondaryHandItem ~= nil then
+        player:setSecondaryHandItem(nil)
+        cleaned = true
+    elseif player.setSecondaryHandItem ~= nil then
+        player:setSecondaryHandItem(nil)
+    end
+
+    local wornItems = player.getWornItems ~= nil and player:getWornItems() or nil
+    local wornCount = wornItems ~= nil and wornItems.size ~= nil and wornItems:size() or 0
+    if wornCount > 0 then
+        cleaned = true
+        if player.clearWornItems ~= nil then
+            player:clearWornItems()
+        elseif player.setWornItem ~= nil then
+            for i = 0, wornCount - 1 do
+                local entry = wornItems:get(i)
+                local location = entry ~= nil and entry.getLocation ~= nil and entry:getLocation() or nil
+                if (location == nil or location == "") and entry ~= nil and entry.getItem ~= nil then
+                    local wornItem = entry:getItem()
+                    if wornItem ~= nil and wornItem.getBodyLocation ~= nil then
+                        location = wornItem:getBodyLocation()
+                    end
+                end
+                if location ~= nil and location ~= "" then
+                    player:setWornItem(location, nil)
+                end
+            end
+        end
+        if player.setClothingItem_Back ~= nil then
+            player:setClothingItem_Back(nil)
+        end
+    end
+
+    local inv = player.getInventory ~= nil and player:getInventory() or nil
+    local items = inv ~= nil and inv.getItems ~= nil and inv:getItems() or nil
+    local itemCount = items ~= nil and items.size ~= nil and items:size() or 0
+    if inv ~= nil and itemCount > 0 then
+        cleaned = true
+        if inv.clear ~= nil then
+            inv:clear()
+        elseif inv.Remove ~= nil then
+            local snapshot = {}
+            for i = 0, itemCount - 1 do
+                snapshot[#snapshot + 1] = items:get(i)
+            end
+            for _, item in ipairs(snapshot) do
+                if item ~= nil then
+                    inv:Remove(item)
+                end
+            end
+        end
+    end
+
+    return cleaned
 end
 
 function PZRolePlayingShared.resolveSecondaryEquipItem(inv, equipped, primary)

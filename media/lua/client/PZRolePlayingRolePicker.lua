@@ -287,6 +287,9 @@ function PZRolePlayingRolePicker.close()
     logRolePicker("Fermeture du picker")
     PZRolePlayingRolePicker.pendingRole = nil
     PZRolePlayingRolePicker.statusText = nil
+    if PZRolePlayingClient ~= nil and PZRolePlayingClient.onRolePickerClosed ~= nil then
+        PZRolePlayingClient.onRolePickerClosed()
+    end
     if PZRolePlayingRolePicker.panel ~= nil then
         PZRolePlayingRolePicker.panel:removeFromUIManager()
         PZRolePlayingRolePicker.panel = nil

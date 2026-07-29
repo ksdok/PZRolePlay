@@ -12,6 +12,8 @@ local roleRequestSent = false
 local soloPickerFallbackAt = nil
 local mpRolePickerRetryAt = nil
 local retryTickRegistered = false
+local REOPEN_KEY = Keyboard ~= nil and Keyboard.KEY_F7 or nil
+local debugSwitchPending = false
 
 local getNowSeconds = PZRolePlayingShared.getNowSeconds
 local applyCarryProfile = PZRolePlayingShared.applyCarryProfile
@@ -48,6 +50,34 @@ local function showRoleAssigned(roleName)
     end
 end
 
+function PZRolePlayingClient.onRolePickerClosed()
+    debugSwitchPending = false
+end
+
+local function onKeyDown(key)
+    if PZRolePlayingShared.DEBUG_TOOLS ~= true then return end
+    if REOPEN_KEY == nil or key ~= REOPEN_KEY then return end
+    if not isSinglePlayerRuntime() then return end
+    if PZRolePlayingRolePicker.isVisible() then return end
+
+    local player = getPlayer()
+    if player == nil or player:isDead() then return end
+
+    if getTextManager ~= nil then
+        local textManager = getTextManager()
+        if textManager ~= nil and textManager.isTextInputActive ~= nil and textManager:isTextInputActive() then
+            return
+        end
+    end
+
+    debugSwitchPending = true
+    PZRolePlayingRolePicker.openLocal()
+end
+
+if Events.OnKeyDown ~= nil then
+    Events.OnKeyDown.Add(onKeyDown)
+end
+
 local function ensureRetryTickRegistered()
     if retryTickRegistered then return end
     Events.OnTick.Add(PZRolePlayingClient.TickRolePickerFallback)
@@ -62,7 +92,7 @@ local function unregisterRetryTick()
     retryTickRegistered = false
 end
 
-function PZRolePlayingClient.applyRoleLocally(player, roleKey)
+function PZRolePlayingClient.applyRoleLocally(player, roleKey, opts)
     if player == nil or roleKey == nil then return false end
 
     local defs = PZRolePlayingRoles.getActiveRoleDefs()
@@ -70,11 +100,19 @@ function PZRolePlayingClient.applyRoleLocally(player, roleKey)
     if def == nil then return false end
 
     local modData = PZRolePlayingRoles.normalizeModData(player:getModData())
-    if modData[LOCAL_APPLIED_KEY] == roleKey then
+    local force = opts ~= nil and opts.force == true
+    if not force and modData[LOCAL_APPLIED_KEY] == roleKey then
         logSpawn("applyRoleLocally SKIP (déjà appliqué) role=" .. tostring(roleKey))
         return false
     end
-    logSpawn("applyRoleLocally START role=" .. tostring(roleKey) .. " def.equipped=" .. tostring(def.equipped ~= nil))
+    logSpawn("applyRoleLocally START role=" .. tostring(roleKey) .. " def.equipped=" .. tostring(def.equipped ~= nil) .. " force=" .. tostring(force))
+
+    if force then
+        PZRolePlayingShared.clearPlayerLoadout(player)
+        PZRolePlayingShared.resetPlayerPerks(player, PZRolePlayingShared.getRolePerkUnion())
+        PZRolePlayingShared.resetCarryProfile(player)
+        debugSwitchPending = false
+    end
 
     local inv = player:getInventory()
     local roleBag = nil
@@ -108,18 +146,20 @@ function PZRolePlayingClient.chooseRoleLocal(roleKey)
     if player == nil or roleKey == nil then return false end
 
     local modData = PZRolePlayingRoles.normalizeModData(player:getModData())
-    if modData[ROLE_KEY] ~= nil then
+    local force = debugSwitchPending == true
+    if not force and modData[ROLE_KEY] ~= nil then
         PZRolePlayingRolePicker.pendingRole = nil
         PZRolePlayingRolePicker.setStatus("Role deja choisi pour cette partie.")
         return false
     end
 
-    local applied = PZRolePlayingClient.applyRoleLocally(player, roleKey)
+    local applied = PZRolePlayingClient.applyRoleLocally(player, roleKey, { force = force })
     if applied then
         PZRolePlayingRolePicker.close()
         return true
     end
 
+    debugSwitchPending = false
     PZRolePlayingRolePicker.pendingRole = nil
     PZRolePlayingRolePicker.setStatus("Echec de l'application locale du role.")
     return false
