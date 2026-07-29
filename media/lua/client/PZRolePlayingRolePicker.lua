@@ -136,6 +136,14 @@ function RolePickerPanel:createChildren()
         self.roleButtons[roleKey] = button
     end
 
+    -- Bouton de fermeture (croix X) en haut à droite.
+    local closeSize = 24
+    local closeButton = ISButton:new(self.width - closeSize - 8, 8, closeSize, closeSize, "X", self, RolePickerPanel.onCloseButton)
+    closeButton:initialise()
+    closeButton:instantiate()
+    self:addChild(closeButton)
+    self.closeButton = closeButton
+
     self:updateButtons()
 end
 
@@ -158,6 +166,10 @@ function RolePickerPanel:onChooseRole(button)
     sendClientCommand(MODULE, "ChooseRole", {
         roleKey = roleKey,
     })
+end
+
+function RolePickerPanel:onCloseButton()
+    PZRolePlayingRolePicker.close()
 end
 
 function RolePickerPanel:updateButtons()

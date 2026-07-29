@@ -24,6 +24,7 @@ Standalone Project Zomboid mod for role selection at spawn.
 
 ## Picker UX
 
+- A close button (**X**) is available in the top-right corner of the picker.
 - If the picker is closed manually before a choice, it reopens automatically.
 - Once a role is chosen, the picker does not reappear for the current session.
 - In MP, the server remains authoritative on role selection.
