@@ -64,13 +64,18 @@ function PZRolePlayingClient.applyRoleLocally(player, roleKey)
     if def == nil then return false end
 
     local modData = PZRolePlayingRoles.normalizeModData(player:getModData())
-    if modData[LOCAL_APPLIED_KEY] == roleKey then return false end
+    if modData[LOCAL_APPLIED_KEY] == roleKey then
+        logClient("applyRoleLocally SKIP (déjà appliqué) role=" .. tostring(roleKey))
+        return false
+    end
+    logClient("applyRoleLocally START role=" .. tostring(roleKey) .. " def.equipped=" .. tostring(def.equipped ~= nil))
 
     local inv = player:getInventory()
     local roleBag = nil
 
     if def.equipped and def.equipped.bag then
         roleBag = inv:AddItem(def.equipped.bag)
+        logClient("bag créé " .. tostring(def.equipped.bag) .. " -> " .. tostring(roleBag ~= nil))
     end
 
     addRoleItems(inv, roleBag, def.equipped and def.equipped.bag or nil, def.items, def.bagContents)
