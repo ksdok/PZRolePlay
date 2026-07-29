@@ -1,3 +1,4 @@
+require "PZRolePlayingShared"
 require "PZRolePlayingRolesVanilla"
 require "PZRolePlayingRolesBrita"
 
@@ -27,31 +28,8 @@ local BRITA_PROBE_ITEMS = {
     "Base.Suit_Wick",
 }
 
-local function getScriptManagerInstance()
-    if getScriptManager ~= nil then
-        local ok, result = pcall(getScriptManager)
-        if ok and result ~= nil then
-            return result
-        end
-    end
-
-    if ScriptManager ~= nil then
-        if ScriptManager.instance ~= nil then
-            return ScriptManager.instance
-        end
-        if ScriptManager.getInstance ~= nil then
-            local ok, result = pcall(function() return ScriptManager:getInstance() end)
-            if ok and result ~= nil then
-                return result
-            end
-        end
-    end
-
-    return nil
-end
-
 function Roles.detectBritaInstalled()
-    local sm = getScriptManagerInstance()
+    local sm = PZRolePlayingShared and PZRolePlayingShared.getScriptManagerInstance and PZRolePlayingShared.getScriptManagerInstance() or nil
     if sm == nil or sm.getItem == nil then return false end
 
     for _, itemId in ipairs(BRITA_PROBE_ITEMS) do
