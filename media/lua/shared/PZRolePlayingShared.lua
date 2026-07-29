@@ -14,8 +14,11 @@ local MAX_PERK_ADJUST_STEPS = 20
 
 local ROLE_CARRY_CAPACITY = {
     builder = 90,
+    chris = 60,
     demolisseur = 60,
+    hunk = 50,
     invincible = 90,
+    leon = 50,
     mule = 80,
     rambo = 60,
     samourai = 60,
@@ -310,38 +313,94 @@ function PZRolePlayingShared.resolveSecondaryEquipItem(inv, equipped, primary)
     return nil
 end
 
+local function getScriptManagerForItems()
+    if getScriptManager ~= nil then
+        local ok, sm = pcall(getScriptManager)
+        if ok and sm ~= nil then return sm end
+    end
+    if ScriptManager ~= nil then
+        if ScriptManager.instance ~= nil then return ScriptManager.instance end
+        if ScriptManager.getInstance ~= nil then
+            local ok, sm = pcall(function() return ScriptManager:getInstance() end)
+            if ok and sm ~= nil then return sm end
+        end
+    end
+    return nil
+end
+
+local function scriptItemExists(itemId)
+    local sm = getScriptManagerForItems()
+    if sm == nil or sm.getItem == nil then return nil end
+    local ok, item = pcall(function() return sm:getItem(itemId) end)
+    if ok and item ~= nil then return item end
+    return nil
+end
+
 function PZRolePlayingShared.equipRoleItems(player, inv, equipped)
     if player == nil or inv == nil or equipped == nil then return end
+
+    local log = function(msg) PZRolePlayingShared.log("Equip", msg) end
+    log("equipRoleItems START player=" .. tostring(player ~= nil and player:getUsername() or "?"))
 
     local primary = nil
     if equipped.primary then
         primary = inv:FindAndReturn(equipped.primary)
+        log("primary " .. tostring(equipped.primary) .. " -> " .. tostring(primary ~= nil))
         if primary then player:setPrimaryHandItem(primary) end
     end
 
     local secondary = PZRolePlayingShared.resolveSecondaryEquipItem(inv, equipped, primary)
     if secondary ~= nil then
         player:setSecondaryHandItem(secondary)
+        log("secondary set -> " .. tostring(secondary))
     end
 
     if equipped.bag then
         local bag = inv:FindAndReturn(equipped.bag)
+        log("bag " .. tostring(equipped.bag) .. " -> found=" .. tostring(bag ~= nil)
+            .. " script=" .. tostring(scriptItemExists(equipped.bag) ~= nil))
         if bag then
             local bodyLocation = bag.getBodyLocation ~= nil and bag:getBodyLocation() or nil
             if bodyLocation ~= nil and bodyLocation ~= "" and bodyLocation ~= "Back" then
                 player:setWornItem(bodyLocation, bag)
+                log("bag worn at " .. tostring(bodyLocation))
             else
                 player:setClothingItem_Back(bag)
+                log("bag worn at Back")
             end
         end
     end
 
     if equipped.clothes then
         for _, clothId in ipairs(equipped.clothes) do
+            local scriptItem = scriptItemExists(clothId)
             local cloth = inv:FindAndReturn(clothId)
-            if cloth and cloth:getBodyLocation() ~= nil then
-                player:setWornItem(cloth:getBodyLocation(), cloth)
+            -- Si le vêtement n'a pas été créé par addRoleItems (il n'est listé que dans
+            -- equipped.clothes), on le crée ici à la volée pour pouvoir le porter.
+            if cloth == nil and scriptItem ~= nil then
+                cloth = inv:AddItem(clothId)
+                log("cloth " .. tostring(clothId) .. " | créé à la volée (absent de def.items)")
+            end
+            local bodyLoc = cloth ~= nil and cloth.getBodyLocation ~= nil and cloth:getBodyLocation() or nil
+            log("cloth " .. tostring(clothId)
+                .. " | script=" .. tostring(scriptItem ~= nil)
+                .. " | found=" .. tostring(cloth ~= nil)
+                .. " | bodyLocation=" .. tostring(bodyLoc))
+            if cloth and bodyLoc ~= nil and bodyLoc ~= "" then
+                player:setWornItem(bodyLoc, cloth)
+                log("  -> setWornItem(" .. tostring(bodyLoc) .. ") OK")
+            else
+                log("  -> SKIPPED (cloth nil ou bodyLocation vide)")
             end
         end
     end
+
+    -- Récapitulatif des items portés
+    if player.getWornItems ~= nil then
+        local worn = player:getWornItems()
+        if worn ~= nil then
+            log("worn items count=" .. tostring(worn:size()))
+        end
+    end
+    log("equipRoleItems END")
 end

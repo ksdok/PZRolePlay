@@ -1,6 +1,6 @@
 PZRolePlayingRolesBrita = PZRolePlayingRolesBrita or {}
 
-print("[PZRolePlaying] brita roles charge - " .. tostring(18) .. " roles")
+print("[PZRolePlaying] brita roles charge - " .. tostring(22) .. " roles")
 
 local Roles = PZRolePlayingRolesBrita
 
@@ -8,9 +8,10 @@ Roles.MODULE = "PZRolePlaying"
 
 Roles.ROLE_ORDER = {
     "soldat", "voleur", "local_", "medic",
-    "rambo", "sniper", "agent", "samourai", "geek",
+    "rambo", "sniper", "agent", "hunk", "samourai", "geek",
     "survivaliste", "pompier", "athlete", "eclaireur",
     "demolisseur", "invincible", "mule", "builder",
+    "leon", "chris", "jill",
     "civil",
 }
 
@@ -22,6 +23,7 @@ Roles.ROLE_NAMES = {
     rambo = "Rambo",
     sniper = "Sniper",
     agent = "007 Agent",
+    hunk = "Hunk",
     samourai = "Samourai",
     geek = "Geek",
     survivaliste = "Survivaliste",
@@ -32,6 +34,9 @@ Roles.ROLE_NAMES = {
     invincible = "Invincible",
     mule = "Mule",
     builder = "Builder",
+    leon = "Leon Kennedy",
+    chris = "Chris Redfield",
+    jill = "Jill Valentine",
     civil = "Civil",
 }
 
@@ -43,6 +48,7 @@ Roles.ROLE_INFO = {
     rambo = { name = "Rambo", summary = "Tank melee", strengths = "Hache, endurance, breches" },
     sniper = { name = "Sniper", summary = "Longue distance", strengths = ".308, lunette, couverture" },
     agent = { name = "007 Agent", summary = "Agent secret / elimination silencieuse", strengths = "PPK silencieux, MP5SD6, discretion" },
+    hunk = { name = "Hunk", summary = "Operateur USS / fantome", strengths = "MP5SD6, pompier CQB, masque a gaz, furtif" },
     samourai = { name = "Samourai", summary = "Katana / mobilite", strengths = "Lames, vitesse, precision" },
     geek = { name = "Geek", summary = "Electronique / pieges", strengths = "Bidouille, alarmes, gadgets" },
     survivaliste = { name = "Survivaliste", summary = "Nature / autonomie", strengths = "Pieges, loot, autonomie" },
@@ -53,6 +59,9 @@ Roles.ROLE_INFO = {
     invincible = { name = "Invincible", summary = "Tout au max", strengths = "Armes, craft, soins, tank" },
     mule = { name = "Mule", summary = "Transport / stockage", strengths = "Gros sac, vivres, support" },
     builder = { name = "Builder", summary = "Construction / defense", strengths = "Ressources, poids illimite, refill" },
+    leon = { name = "Leon Kennedy", summary = "Agent federal DSO / polyvalent", strengths = "M4A1, VP70, couteau, mobilite" },
+    chris = { name = "Chris Redfield", summary = "BSAA Heavy Assault / tank", strengths = "SPAS-12, Magnum .44, force brute" },
+    jill = { name = "Jill Valentine", summary = "BSAA Operative / eclaireuse", strengths = "MP5, explosifs, lockpick, discretion" },
     civil = { name = "Civil", summary = "Mode difficile", strengths = "Survie pure, aucun bonus" },
 }
 
@@ -412,6 +421,80 @@ Roles.ROLE_DEFS = {
         },
         stats = { endurance = 1, panic = 0 },
     },
+    hunk = {
+        name = "Hunk",
+        skills = {
+            {Perks.Aiming, 10},
+            {Perks.Reloading, 10},
+            {Perks.Sneak, 10},
+            {Perks.Lightfoot, 9},
+            {Perks.Nimble, 9},
+            {Perks.Sprinting, 8},
+            {Perks.Strength, 8},
+            {Perks.Fitness, 8},
+            {Perks.SmallBlade, 6},
+            {Perks.Maintenance, 4},
+            {Perks.Doctor, 4},
+            {Perks.Electrical, 3},
+        },
+        items = {
+            -- ── Primaire : SMG 9 mm suppressé (MP5SD6) ──
+            {"Base.MP5SD6_Fixed", 1},        -- H&K MP5SD2 (suppressor intégré)
+            {"Base.9mmClip", 5},             -- chargeurs 9 mm (communs SMG + pistolet)
+            {"Base.Bullets9mm", 150},       -- munitions 9 mm
+            -- ── Sidearm : pistolet 9 mm tactique (Sig P226) ──
+            {"Base.P226", 1},                -- Sig Sauer P226 9 mm
+            {"Base.Suppressor_Pistol", 1},  -- suppressor pistolet
+            -- ── Pompier CQB (W-870 analog) ──
+            {"Base.M870_CQB", 1},           -- Model 870 MCS CQB 14"
+            {"Base.ShotgunShells", 30},     -- cartouches 12 ga
+            -- ── Mêlée ──
+            {"Base.HuntingKnife", 1},       -- couteau de combat
+            {"Base.PipeBomb", 3},           -- grenades (approximation)
+            -- ── Accessoires d'arme ──
+            {"Base.Light_Small", 2},
+            {"Base.Laser_Green", 1},
+            {"Base.Cleaning", 1},
+            {"Base.WD", 1},
+            -- ── Utilitaires & consommables ──
+            {"Base.Screwdriver", 1},
+            {"Base.Bandage", 5},
+            {"Base.PillsVitamins", 2},
+            {"Base.WaterBottleFull", 1},
+            {"Base.Bag_Tactical_Alice", 1},
+            {"Base.Map", 1},
+            {"Base.Torch", 1},
+            {"Base.Battery", 3},
+            {"Base.TinnedBeans", 2},
+            {"Base.TinnedSoup", 2},
+            {"Base.CanOpener", 1},
+        },
+        bagContents = {
+            {"Base.9mmClip", 3},
+            {"Base.Bullets9mm", 60},
+            {"Base.ShotgunShells", 20},
+            {"Base.PipeBomb", 1},
+            {"Base.Bandage", 3},
+            {"Base.TinnedBeans", 1},
+            {"Base.TinnedSoup", 1},
+            {"Base.Battery", 2},
+            {"Base.Torch", 1},
+        },
+        equipped = {
+            primary = "Base.MP5SD6_Fixed",
+            bag = "Base.Bag_Tactical_Alice",
+            clothes = {
+                "Base.Hat_FAST_Opscore",      -- Hat : casque balistique
+                "Base.Hat_M50",               -- Mask : masque à gaz intégral M50 (signature Hunk)
+                "Base.Armor_Defender",        -- TorsoExtra : gilet pare-balles
+                "Base.Combat_Jumper",         -- Jacket : chemisette combat
+                "Base.Combat_Pants",          -- Pants
+                "Base.Tac_Boots",             -- Shoes
+                "Base.Glove_Mechanix_Pact",   -- Hands
+            },
+        },
+        stats = { endurance = 0.6, panic = 0, fatigue = 0 },
+    },
     samourai = {
         name = "Samourai",
         skills = {
@@ -740,15 +823,40 @@ Roles.ROLE_DEFS = {
             {Perks.Trapping, 3},
         },
         items = {
-            {"Base.M249", 1},
-            {"Base.556Belt", 2},
-            {"Base.556Bullets", 200},
+            -- ── Primaire : LMG 5.56 ──
+            {"Base.M249", 1},                  -- M249E2 LMG
+            {"Base.556Belt", 3},               -- ceintures 5.56 (MagazineType du M249)
+            {"Base.556Bullets", 300},          -- munitions 5.56
+            -- ── DMR .308 : H&K G28 ──
+            {"Base.G28", 1},                   -- H&K G28 (MagazineType = 308ExtClip)
+            {"Base.Sight_G28_Scope", 1},       -- lunette dédiée G28
+            {"Base.Sight_Thermal", 1},         -- scope thermique (option end-game)
+            {"Base.Suppressor_Rifle", 1},     -- suppressor fusil
+            {"Base.308ExtClip", 4},            -- chargeurs NATO 20 coups (CORRIGÉ : 308Clip incompatibles)
+            {"Base.308Bullets", 100},          -- munitions .308
+            -- ── Secondaire : pistolet .45 S&W 4506 ──
+            {"Base.M4506", 1},                 -- S&W Model 4506 .45 ACP (MagazineType = 45DSClip)
+            {"Base.Suppressor_Pistol", 1},    -- suppressor pistolet
+            {"Base.45DSClip", 4},              -- chargeurs .45 dbl-stack 13 coups (CORRIGÉ)
+            {"Base.Bullets45", 65},            -- munitions .45 (CORRIGÉ)
+            -- ── Mêlée ──
             {"Base.Katana", 1},
             {"Base.Sledgehammer", 1},
+            -- ── Accessoires d'arme ──
+            {"Base.Laser_Green", 2},
+            {"Base.Light_Small", 2},
+            {"Base.Cleaning", 1},
+            {"Base.WD", 1},
+            -- ── Armure tier max (voir equipped) ──
+            {"Base.Armor_Defender", 1},        -- FORT Defender 2 (TorsoExtra, Bullet 150)
+            {"Base.Hat_PSGT_Helmet", 1},      -- casque PASGT (Bite/Scratch 120)
+            {"Base.Hat_Riot_Visor", 1},        -- visière anti-émeute (RightEye)
+            {"Base.Hat_PVS15_ON", 1},          -- NVG PVS-15 (Nose)
+            -- ── Utilitaires & consommables ──
             {"Base.Screwdriver", 1},
             {"Base.Bandage", 5},
             {"Base.PillsVitamins", 2},
-            {"Base.WaterBottleFull", 1},
+            {"Base.WaterBottleFull", 2},
             {"Base.Bag_Tactical_Alice", 1},
             {"Base.Map", 1},
             {"Base.Torch", 1},
@@ -756,22 +864,14 @@ Roles.ROLE_DEFS = {
             {"Base.TinnedBeans", 2},
             {"Base.TinnedSoup", 2},
             {"Base.CanOpener", 1},
-            {"Base.Laser_Green", 2},
-            {"Base.Light_Small", 2},
-            {"Base.Cleaning", 1},
-            {"Base.WD", 1},
-            {"Base.M4506", 1},          -- S&W 4506, pistolet 9 mm (successeur de la série Model 39/5900)
-            {"Base.Suppressor_Pistol", 1},  -- suppressor pistolet (déjà utilisé par agent/voleur)
-            {"Base.9mmClip", 3},         -- chargeur 9 mm
-            {"Base.Bullets9mm", 60},     -- munitions 9 mm
-            {"Base.G28", 1},                  -- DMR semi-auto 7.62
-            {"Base.Sight_G28_Scope", 1},       -- lunette dédiée du G28 (scope)
-            {"Base.308Clip", 4},               -- chargeurs .308
-            {"Base.308Bullets", 80},
         },
         bagContents = {
             {"Base.556Belt", 1},
             {"Base.556Bullets", 120},
+            {"Base.308ExtClip", 2},
+            {"Base.308Bullets", 40},
+            {"Base.45DSClip", 2},
+            {"Base.Bullets45", 26},
             {"Base.Katana", 1},
             {"Base.Bandage", 5},
             {"Base.Map", 1},
@@ -784,11 +884,14 @@ Roles.ROLE_DEFS = {
             primary = "Base.M249",
             bag = "Base.Bag_Tactical_Alice",
             clothes = {
-                "Base.Combat_Jumper",
-                "Base.Combat_Pants",
-                "Base.EOD_Helmet",
-                "Base.Tac_Boots",
-                "Base.Glove_Mechanix_Pact",
+                "Base.Armor_Defender",        -- TorsoExtra : plate carrier (Bullet 150)
+                "Base.Combat_Jumper",         -- Jacket
+                "Base.Combat_Pants",          -- Pants
+                "Base.Hat_PSGT_Helmet",       -- Hat : casque balistique 120/120
+                "Base.Hat_Riot_Visor",        -- RightEye : visière anti-émeute
+                "Base.Hat_PVS15_ON",          -- Nose : NVG
+                "Base.Tac_Boots",             -- Shoes
+                "Base.Glove_Mechanix_Pact",   -- Hands
             },
         },
         stats = { endurance = 1, panic = 0, fatigue = 0 },
@@ -912,6 +1015,211 @@ Roles.ROLE_DEFS = {
             },
         },
         stats = { endurance = 1, panic = 0 },
+    },
+    leon = {
+        name = "Leon Kennedy",
+        skills = {
+            {Perks.Aiming, 9},
+            {Perks.Reloading, 9},
+            {Perks.Nimble, 8},
+            {Perks.Lightfoot, 7},
+            {Perks.Sprinting, 7},
+            {Perks.Strength, 6},
+            {Perks.Fitness, 6},
+            {Perks.SmallBlade, 5},
+            {Perks.Sneak, 5},
+            {Perks.Doctor, 3},
+        },
+        items = {
+            {"Base.M4A1", 1},
+            {"Base.556Clip", 4},
+            {"Base.556Bullets", 120},
+            {"Base.VP70", 1},
+            {"Base.9mmClip", 3},
+            {"Base.Bullets9mm", 90},
+            {"Base.M870_Police", 1},
+            {"Base.ShotgunShells", 25},
+            {"Base.MP5_Stock", 1},
+            {"Base.HuntingKnife", 1},
+            {"Base.PipeBomb", 2},
+            {"Base.Light_Small", 1},
+            {"Base.Sight_EOTech", 1},
+            {"Base.Suppressor_Pistol", 1},
+            {"Base.Cleaning", 1},
+            {"Base.WD", 1},
+            {"Base.Screwdriver", 1},
+            {"Base.CanOpener", 1},
+            {"Base.WaterBottleFull", 1},
+            {"Base.Bandage", 3},
+            {"Base.PillsVitamins", 1},
+            {"Base.TinnedBeans", 2},
+            {"Base.TinnedSoup", 2},
+            {"Base.Crackers", 1},
+            {"Base.Apple", 1},
+            {"Base.Bag_D3M", 1},
+        },
+        bagContents = {
+            {"Base.556Clip", 2},
+            {"Base.556Bullets", 60},
+            {"Base.9mmClip", 2},
+            {"Base.Bullets9mm", 45},
+            {"Base.ShotgunShells", 15},
+            {"Base.PipeBomb", 1},
+            {"Base.Bandage", 2},
+            {"Base.WaterBottleFull", 1},
+            {"Base.TinnedBeans", 1},
+            {"Base.TinnedSoup", 1},
+            {"Base.Crackers", 1},
+        },
+        equipped = {
+            primary = "Base.M4A1",
+            bag = "Base.Bag_D3M",
+            clothes = {
+                "Base.Combat_Jumper",
+                "Base.Combat_Pants",
+                "Base.Tac_Boots",
+                "Base.Glove_Mechanix_Pact",
+                "Base.Armor_Defender",
+            },
+        },
+        stats = { endurance = 0.5, panic = 0, fatigue = 0 },
+    },
+    chris = {
+        name = "Chris Redfield",
+        skills = {
+            {Perks.Strength, 10},
+            {Perks.Fitness, 9},
+            {Perks.Aiming, 9},
+            {Perks.Reloading, 8},
+            {Perks.Axe, 7},
+            {Perks.Sprinting, 6},
+            {Perks.Nimble, 5},
+            {Perks.LongBlunt, 5},
+            {Perks.Doctor, 3},
+            {Perks.Maintenance, 3},
+        },
+        items = {
+            {"Base.SPAS12_Fixed", 1},
+            {"Base.M29_44", 1},
+            {"Base.AK103", 1},
+            {"Base.HuntingKnife", 1},
+            {"Base.PipeBomb", 3},
+            {"Base.ShotgunShells", 40},
+            {"Base.44Clip", 2},
+            {"Base.Bullets44", 50},
+            {"Base.AKClip", 4},
+            {"Base.762x39Bullets", 120},
+            {"Base.Light_Large", 1},
+            {"Base.Sight_4xACOG", 1},
+            {"Base.ForeGrip", 1},
+            {"Base.Cleaning", 1},
+            {"Base.WD", 1},
+            {"Base.Screwdriver", 1},
+            {"Base.CanOpener", 1},
+            {"Base.WaterBottleFull", 1},
+            {"Base.Bandage", 3},
+            {"Base.PillsVitamins", 2},
+            {"Base.TinnedBeans", 2},
+            {"Base.TinnedSoup", 2},
+            {"Base.Crackers", 1},
+            {"Base.CannedPotato", 1},
+            {"Base.Bag_Tactical_Alice", 1},
+        },
+        bagContents = {
+            {"Base.ShotgunShells", 25},
+            {"Base.Bullets44", 25},
+            {"Base.AKClip", 2},
+            {"Base.762x39Bullets", 60},
+            {"Base.PipeBomb", 1},
+            {"Base.Bandage", 2},
+            {"Base.WaterBottleFull", 1},
+            {"Base.TinnedBeans", 1},
+            {"Base.TinnedSoup", 1},
+            {"Base.Crackers", 1},
+            {"Base.Battery", 2},
+        },
+        equipped = {
+            primary = "Base.SPAS12_Fixed",
+            bag = "Base.Bag_Tactical_Alice",
+            clothes = {
+                "Base.Hat_FAST_Opscore",
+                "Base.Hat_M50",
+                "Base.Armor_Defender",
+                "Base.Combat_Jumper",
+                "Base.Combat_Pants",
+                "Base.Tac_Boots",
+                "Base.Glove_Mechanix_Pact",
+            },
+        },
+        stats = { endurance = 0.3, panic = 0, fatigue = 0 },
+    },
+    jill = {
+        name = "Jill Valentine",
+        skills = {
+            {Perks.Aiming, 9},
+            {Perks.Reloading, 9},
+            {Perks.Sneak, 8},
+            {Perks.Lightfoot, 8},
+            {Perks.Nimble, 8},
+            {Perks.Sprinting, 7},
+            {Perks.Fitness, 5},
+            {Perks.Strength, 5},
+            {Perks.SmallBlade, 5},
+            {Perks.Electrical, 4},
+            {Perks.Doctor, 3},
+        },
+        items = {
+            {"Base.MP5_Stock", 1},
+            {"Base.PPK", 1},
+            {"Base.CZ75", 1},
+            {"Base.HuntingKnife", 1},
+            {"Base.PipeBomb", 3},
+            {"Base.9mmClip", 5},
+            {"Base.Bullets9mm", 150},
+            {"Base.380Clip", 2},
+            {"Base.Bullets380", 40},
+            {"Base.Light_Small", 1},
+            {"Base.Sight_MicroDot", 1},
+            {"Base.Suppressor_Pistol", 1},
+            {"Base.Cleaning", 1},
+            {"Base.WD", 1},
+            {"Base.Screwdriver", 1},
+            {"Base.CanOpener", 1},
+            {"Base.WaterBottleFull", 1},
+            {"Base.Bandage", 3},
+            {"Base.PillsVitamins", 1},
+            {"Base.TinnedBeans", 2},
+            {"Base.TinnedSoup", 2},
+            {"Base.Crackers", 1},
+            {"Base.Apple", 1},
+            {"Base.Bag_D3M", 1},
+        },
+        bagContents = {
+            {"Base.9mmClip", 3},
+            {"Base.Bullets9mm", 60},
+            {"Base.PipeBomb", 1},
+            {"Base.Bandage", 3},
+            {"Base.WaterBottleFull", 1},
+            {"Base.PillsVitamins", 1},
+            {"Base.TinnedBeans", 1},
+            {"Base.TinnedSoup", 1},
+            {"Base.Crackers", 1},
+            {"Base.Torch", 1},
+            {"Base.Battery", 1},
+        },
+        equipped = {
+            primary = "Base.MP5_Stock",
+            bag = "Base.Bag_D3M",
+            clothes = {
+                "Base.Hat_Tactical_Cap",
+                "Base.Armor_Defender",
+                "Base.Combat_Jumper",
+                "Base.Combat_Pants",
+                "Base.Tac_Boots",
+                "Base.Glove_Mechanix_Pact",
+            },
+        },
+        stats = { endurance = 0.5, panic = 0, fatigue = 0 },
     },
     civil = {
         name = "Civil",
