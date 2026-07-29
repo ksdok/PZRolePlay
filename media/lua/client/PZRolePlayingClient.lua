@@ -12,7 +12,7 @@ local roleRequestSent = false
 local soloPickerFallbackAt = nil
 local mpRolePickerRetryAt = nil
 local retryTickRegistered = false
-local REOPEN_KEY = Keyboard ~= nil and Keyboard.KEY_F7 or nil
+local REOPEN_KEY = Keyboard ~= nil and Keyboard.KEY_K or nil
 local debugSwitchPending = false
 
 local getNowSeconds = PZRolePlayingShared.getNowSeconds
@@ -54,28 +54,46 @@ function PZRolePlayingClient.onRolePickerClosed()
     debugSwitchPending = false
 end
 
-local function onKeyDown(key)
+local function onKeyPressed(key)
     if PZRolePlayingShared.DEBUG_TOOLS ~= true then return end
     if REOPEN_KEY == nil or key ~= REOPEN_KEY then return end
-    if not isSinglePlayerRuntime() then return end
-    if PZRolePlayingRolePicker.isVisible() then return end
+
+    logClient("debug key pressed key=" .. tostring(key) .. " reopenKey=" .. tostring(REOPEN_KEY))
+
+    if not isSinglePlayerRuntime() then
+        logClient("debug key ignored - not single player runtime")
+        return
+    end
+    if PZRolePlayingRolePicker.isVisible() then
+        logClient("debug key ignored - picker already visible")
+        return
+    end
 
     local player = getPlayer()
-    if player == nil or player:isDead() then return end
+    if player == nil then
+        logClient("debug key ignored - player nil")
+        return
+    end
+    if player:isDead() then
+        logClient("debug key ignored - player dead")
+        return
+    end
 
     if getTextManager ~= nil then
         local textManager = getTextManager()
         if textManager ~= nil and textManager.isTextInputActive ~= nil and textManager:isTextInputActive() then
+            logClient("debug key ignored - text input active")
             return
         end
     end
 
     debugSwitchPending = true
+    logClient("debug key accepted - opening picker")
     PZRolePlayingRolePicker.openLocal()
 end
 
-if Events.OnKeyDown ~= nil then
-    Events.OnKeyDown.Add(onKeyDown)
+if Events.OnKeyPressed ~= nil then
+    Events.OnKeyPressed.Add(onKeyPressed)
 end
 
 local function ensureRetryTickRegistered()

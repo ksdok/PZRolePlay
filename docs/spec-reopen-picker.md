@@ -16,7 +16,7 @@ Pouvoir rouvrir le role picker **après** qu'un rôle a été choisi, puis en ap
 
 | Choix | Valeur |
 |---|---|
-| Déclencheur | Touche clavier (défaut : `Keyboard.KEY_F7`, modifiable) |
+| Déclencheur | Touche clavier (défaut : `Keyboard.KEY_K`, modifiable) |
 | Items au switch | **Clean slate** : vider inventaire + items portés + mains **avant toute mutation d'inventaire** (donc avant la création du sac) |
 | Skills au switch | **Reset des perks/XP** (union des perks utilisés par les rôles) avant d'appliquer celles du nouveau rôle |
 | Carry au switch | **Reset du carry profile** (UnlimitedCarry/MaxWeightBase/MaxWeight → baseline) avant d'appliquer celui du nouveau rôle |
@@ -33,7 +33,7 @@ Gards existants à ne **pas** court-circuiter en vidant `modData` (cela casserai
 
 **Approche retenue : bypass debug explicite, sans toucher à `modData` avant validation.**
 
-- La touche F7 ouvre le picker en mode « debug switch » via un flag transient `debugSwitchPending = true`. **`modData[ROLE_KEY]` / `LOCAL_APPLIED_KEY` ne sont pas modifiés à l'ouverture.**
+- La touche K ouvre le picker en mode « debug switch » via un flag transient `debugSwitchPending = true`. **`modData[ROLE_KEY]` / `LOCAL_APPLIED_KEY` ne sont pas modifiés à l'ouverture.**
 - Le bouton « Choisir » appelle `chooseRoleLocal(roleKey)` ; si `debugSwitchPending` est vrai, on **bypass** le garde `ROLE_KEY ~= nil` et on appelle `applyRoleLocally(player, roleKey, { force = true })`.
 - `applyRoleLocally` avec `force = true` : bypass le garde `LOCAL_APPLIED_KEY == roleKey` et exécute le **clean slate complet** (inv/worn/hands + reset perks + reset carry) **avant** la création du sac / `addRoleItems` / skills / equip / stats / carry, puis écrit `modData[ROLE_KEY] = roleKey` et `LOCAL_APPLIED_KEY = roleKey`.
 - **Fermeture sans choix** : `close()` remet `debugSwitchPending = false`. Aucun `modData` n'a été muté, l'ancien rôle et son loadout sont intacts → annulation propre, pas de restauration nécessaire, pas de réouverture auto (le fallback de spawn ne se réarme pas car `ROLE_KEY` n'a jamais été vidé).
@@ -65,10 +65,10 @@ end
 
 ### 3. Keybind + réouverture — `media/lua/client/PZRolePlayingClient.lua`
 ```lua
-local REOPEN_KEY = Keyboard.KEY_F7
+local REOPEN_KEY = Keyboard.KEY_K
 local debugSwitchPending = false   -- module-local
 
-local function onKeyDown(key)
+local function onKeyPressed(key)
     if PZRolePlayingShared.DEBUG_TOOLS ~= true then return end
     if key ~= REOPEN_KEY then return end
     if not isSinglePlayerRuntime() then return end            -- solo only
@@ -80,7 +80,7 @@ local function onKeyDown(key)
     debugSwitchPending = true
     PZRolePlayingRolePicker.openLocal()
 end
-Events.OnKeyDown.Add(onKeyDown)
+Events.OnKeyPressed.Add(onKeyPressed)
 ```
 
 `PZRolePlayingRolePicker.close()` (existant) : ajouter `debugSwitchPending = false` via un hook ou appeler depuis le client quand le picker se ferme sans choix (annulation propre).
@@ -128,7 +128,7 @@ Le clean slate précède donc la création du sac (résout le point 4).
 
 ## Choix de la touche
 
-Défaut : `Keyboard.KEY_F7` (constante `REOPEN_KEY` modifiable). F7 = peu utilisée en jeu standard.
+Défaut : `Keyboard.KEY_K` (constante `REOPEN_KEY` modifiable).
 
 ## Cas limites / risques
 
@@ -142,15 +142,15 @@ Défaut : `Keyboard.KEY_F7` (constante `REOPEN_KEY` modifiable). F7 = peu utilis
 ## Fichiers modifiés
 
 - `media/lua/shared/PZRolePlayingShared.lua` : flag `DEBUG_TOOLS` + `clearPlayerLoadout` + `resetPlayerPerks` + `resetCarryProfile` + `buildRolePerkUnion`/`getRolePerkUnion`.
-- `media/lua/client/PZRolePlayingClient.lua` : keybind `onKeyDown`, `debugSwitchPending`, bypass dans `chooseRoleLocal`, param `opts.force` dans `applyRoleLocally`, reset `debugSwitchPending` à la fermeture sans choix.
+- `media/lua/client/PZRolePlayingClient.lua` : keybind `onKeyPressed`, `debugSwitchPending`, bypass dans `chooseRoleLocal`, param `opts.force` dans `applyRoleLocally`, reset `debugSwitchPending` à la fermeture sans choix.
 
 ## Vérification
 
 1. `PZRolePlayingShared.DEBUG_TOOLS = true`, lancer solo, choisir rôle A → loadout/skills/carry de A.
-2. Appuyer sur **F7** → picker réapparaît (rôle A toujours actif).
+2. Appuyer sur **K** → picker réapparaît (rôle A toujours actif).
 3. Fermer le picker sans choisir → rien ne change (inventaire A intact, `ROLE_KEY` = A).
-4. Rappuyer F7, choisir rôle B → **clean slate** (plus de trace de A), skills = B, carry = B, équipement porté = B.
+4. Rappuyer K, choisir rôle B → **clean slate** (plus de trace de A), skills = B, carry = B, équipement porté = B.
 5. Choisir à nouveau B → re-clean slate + re-applique B (vérifie le bypass même-rôle).
-6. `DEBUG_TOOLS = false` → F7 ne fait rien.
-7. Lancer en MP (host) → F7 ne fait rien (gate solo).
+6. `DEBUG_TOOLS = false` → K ne fait rien.
+7. Lancer en MP (host) → K ne fait rien (gate solo).
 8. Vérifier qu'après un switch B, une fermeture sans choix laisse B intact (pas de retour à A).

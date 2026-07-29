@@ -9,7 +9,7 @@ if PZRolePlayingShared.VERBOSE_EQUIP_LOGS == nil then
 end
 
 if PZRolePlayingShared.DEBUG_TOOLS == nil then
-    PZRolePlayingShared.DEBUG_TOOLS = false
+    PZRolePlayingShared.DEBUG_TOOLS = true
 end
 
 function PZRolePlayingShared.log(module, message)
@@ -38,6 +38,12 @@ local ROLE_CARRY_CAPACITY = {
     mule = 80,
     rambo = 60,
     samourai = 60,
+    -- Poids sans impact (unlimited carry) pour ces rôles.
+    -- Note : applyCarryProfile active désormais unlimitedCarry pour TOUS les
+    -- rôles ; cette table n'ajoute qu'un bonus de maxWeightBase/maxWeight.
+    soldat = 60,
+    sniper = 60,
+    survivaliste = 60,
 }
 
 function PZRolePlayingShared.round(value)
@@ -107,13 +113,17 @@ function PZRolePlayingShared.applyCarryProfile(player, roleKey)
     ensureCarryBaseline(player)
 
     local carryCapacity = ROLE_CARRY_CAPACITY[roleKey]
-    local unlimitedCarry = carryCapacity ~= nil
+    -- Tous les rôles : poids sans impact (unlimited carry).
+    local unlimitedCarry = true
 
     if player.setUnlimitedCarry ~= nil then
         player:setUnlimitedCarry(unlimitedCarry)
     end
 
-    if not unlimitedCarry then return end
+    -- maxWeightBase/maxWeight bonus uniquement pour les rôles ayant une
+    -- capacité définie dans ROLE_CARRY_CAPACITY ; sans impact sur le poids
+    -- puisque unlimitedCarry est toujours actif.
+    if carryCapacity == nil then return end
 
     if player.getMaxWeightBase ~= nil and player.setMaxWeightBase ~= nil then
         local baseWeight = player:getMaxWeightBase() or 0
