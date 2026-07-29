@@ -22,26 +22,13 @@ local COLOR_PENDING = {r = 1, g = 0.85, b = 0.2, a = 1}
 local COLOR_WHITE = {r = 1, g = 1, b = 1, a = 1}
 local COLOR_RED = {r = 0.9, g = 0.35, b = 0.35, a = 1}
 
--- ── Layout de la grille (adaptatif au nombre de rôles) ──
+-- ── Layout de la grille ──
 local ROW_TOP = 92
 local ROW_HEIGHT = 74
 local CARD_HEIGHT = 68
 local COLUMN_GAP = 16
-local CARD_WIDTH_TARGET = 250
-
-local function computeGridLayout(roleCount)
-    local screenW = getCore():getScreenWidth()
-    local screenH = getCore():getScreenHeight()
-    -- Hauteur de contenu disponible (sous le header, avec marges)
-    local availHeight = math.max(240, screenH - 20 - ROW_TOP - 40)
-    local maxRows = math.max(3, math.floor(availHeight / ROW_HEIGHT))
-    -- On grandit en hauteur d'abord : nombre minimal de colonnes pour tenir
-    local columns = math.max(3, math.ceil(roleCount / maxRows))
-    local rowsPerColumn = math.max(1, math.ceil(roleCount / columns))
-    local neededWidth = 32 + columns * CARD_WIDTH_TARGET + (columns - 1) * COLUMN_GAP
-    local neededHeight = ROW_TOP + rowsPerColumn * ROW_HEIGHT + 40
-    return columns, rowsPerColumn, neededWidth, neededHeight
-end
+local CARD_WIDTH_TARGET = 250   -- largeur souhaitée d'une carte
+local MIN_CARD_WIDTH = 210       -- largeur mini : les cartes ne rétrécissent jamais en dessous (bouton reste lisible)
 
 PZRolePlayingRolePicker.panel = nil
 PZRolePlayingRolePicker.pendingRole = nil
@@ -75,6 +62,30 @@ local function setButtonTitle(button, title)
     end
 end
 
+-- Calcule colonnes/lignes à partir des dimensions RÉELLES de l'écran.
+-- - contrainte largeur  : columns <= maxColsByWidth (cartes >= MIN_CARD_WIDTH)
+-- - contrainte hauteur  : rowsPerColumn <= maxRows (pas de floor synthétique)
+-- Si l'écran est trop petit pour tout tenir (cas extrême), on garde au moins 1 colonne
+-- et on accepte que le bas soit clippé par le panel (capped à l'écran).
+local function computeGridLayout(roleCount)
+    local screenW = getCore():getScreenWidth()
+    local screenH = getCore():getScreenHeight()
+    local availW = math.max(MIN_CARD_WIDTH, screenW - 20 - 32)
+    local availH = screenH - 20 - ROW_TOP - 40
+    if availH < ROW_HEIGHT then availH = ROW_HEIGHT end
+
+    local maxRows = math.max(1, math.floor(availH / ROW_HEIGHT))
+    local maxColsByWidth = math.max(1, math.floor((availW + COLUMN_GAP) / (MIN_CARD_WIDTH + COLUMN_GAP)))
+
+    local columns = math.max(1, math.ceil(roleCount / maxRows))
+    columns = math.min(columns, maxColsByWidth, roleCount)
+    local rowsPerColumn = math.max(1, math.ceil(roleCount / columns))
+
+    local neededWidth = 32 + columns * CARD_WIDTH_TARGET + (columns - 1) * COLUMN_GAP
+    local neededHeight = ROW_TOP + rowsPerColumn * ROW_HEIGHT + 40
+    return columns, rowsPerColumn, neededWidth, neededHeight
+end
+
 function RolePickerPanel:initialise()
     ISPanel.initialise(self)
 end
@@ -97,6 +108,10 @@ function RolePickerPanel:createChildren()
 
     local contentWidth = self.width - 32
     self.cardWidth = math.floor((contentWidth - (self.columns - 1) * self.columnGap) / self.columns)
+    -- Garde de sécurité : ne jamais descendre sous MIN_CARD_WIDTH (bouton reste lisible).
+    if self.cardWidth < MIN_CARD_WIDTH then
+        self.cardWidth = MIN_CARD_WIDTH
+    end
 
     for index, roleKey in ipairs(roleOrder) do
         local column = math.floor((index - 1) / self.rowsPerColumn)
@@ -197,8 +212,7 @@ function RolePickerPanel:render()
             self:drawText(info.summary, rowX + 10, rowY + 28, 0.86, 0.86, 0.86, 1, UIFont.Small)
             self:drawText(info.strengths, rowX + 10, rowY + 44, 0.72, 0.72, 0.72, 1, UIFont.Small)
 
-            -- Statut : on n'affiche plus « Disponible » (clutter). On ne montre
-            -- le statut que si un choix est en cours de validation pour ce rôle.
+            -- Statut : on n'affiche plus « Disponible » (clutter). Uniquement si validation en cours.
             if PZRolePlayingRolePicker.pendingRole == roleKey then
                 self:drawText("Validation en cours...", rowX + 10, rowY + 58, COLOR_PENDING.r, COLOR_PENDING.g, COLOR_PENDING.b, COLOR_PENDING.a, UIFont.Small)
             end
@@ -248,7 +262,7 @@ function PZRolePlayingRolePicker.open(mode)
     local roleCount = #(PZRolePlayingRoles.getActiveRoleOrder() or {})
     local columns, rowsPerColumn, neededWidth, neededHeight = computeGridLayout(roleCount)
     local width = math.min(neededWidth, getCore():getScreenWidth() - 20)
-    local height = math.min(math.max(neededHeight, 360), getCore():getScreenHeight() - 20)
+    local height = math.min(neededHeight, getCore():getScreenHeight() - 20)
     local x = math.max(10, math.floor((getCore():getScreenWidth() - width) / 2))
     local y = math.max(10, math.floor((getCore():getScreenHeight() - height) / 2))
 

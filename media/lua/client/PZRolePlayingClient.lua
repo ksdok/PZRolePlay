@@ -25,6 +25,12 @@ local function logClient(message)
     PZRolePlayingShared.log("Client", message)
 end
 
+-- Logs verbose de spawn : désactivés en production. Passer PZRolePlayingShared.VERBOSE_EQUIP_LOGS à true pour diagnostiquer.
+local function logSpawn(message)
+    if PZRolePlayingShared.VERBOSE_EQUIP_LOGS ~= true then return end
+    print("[PZRolePlaying][Client] " .. tostring(message))
+end
+
 local function isSinglePlayerRuntime()
     if isClient ~= nil then
         return not isClient()
@@ -65,17 +71,17 @@ function PZRolePlayingClient.applyRoleLocally(player, roleKey)
 
     local modData = PZRolePlayingRoles.normalizeModData(player:getModData())
     if modData[LOCAL_APPLIED_KEY] == roleKey then
-        logClient("applyRoleLocally SKIP (déjà appliqué) role=" .. tostring(roleKey))
+        logSpawn("applyRoleLocally SKIP (déjà appliqué) role=" .. tostring(roleKey))
         return false
     end
-    logClient("applyRoleLocally START role=" .. tostring(roleKey) .. " def.equipped=" .. tostring(def.equipped ~= nil))
+    logSpawn("applyRoleLocally START role=" .. tostring(roleKey) .. " def.equipped=" .. tostring(def.equipped ~= nil))
 
     local inv = player:getInventory()
     local roleBag = nil
 
     if def.equipped and def.equipped.bag then
         roleBag = inv:AddItem(def.equipped.bag)
-        logClient("bag créé " .. tostring(def.equipped.bag) .. " -> " .. tostring(roleBag ~= nil))
+        logSpawn("bag créé " .. tostring(def.equipped.bag) .. " -> " .. tostring(roleBag ~= nil))
     end
 
     addRoleItems(inv, roleBag, def.equipped and def.equipped.bag or nil, def.items, def.bagContents)
