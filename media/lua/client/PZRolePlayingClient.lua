@@ -12,8 +12,29 @@ local roleRequestSent = false
 local soloPickerFallbackAt = nil
 local mpRolePickerRetryAt = nil
 local retryTickRegistered = false
-local REOPEN_KEY = Keyboard ~= nil and Keyboard.KEY_K or nil
+local REOPEN_KEY_NAME = "PZRolePlay: Reopen Role Picker"
+local REOPEN_KEY_DEFAULT = Keyboard ~= nil and Keyboard.KEY_K or nil
 local debugSwitchPending = false
+
+-- Enregistre la keybind dans le menu d'options du jeu (Options > Keys),
+-- modifiable par le joueur. Touche par défaut : K.
+if getCore ~= nil and REOPEN_KEY_DEFAULT ~= nil then
+    local core = getCore()
+    if core ~= nil and core.addKeyBinding ~= nil then
+        pcall(function() core:addKeyBinding(REOPEN_KEY_NAME, REOPEN_KEY_DEFAULT) end)
+    end
+end
+
+local function getReopenKey()
+    if getCore ~= nil then
+        local core = getCore()
+        if core ~= nil and core.getKey ~= nil then
+            local k = core:getKey(REOPEN_KEY_NAME)
+            if k ~= nil and k > 0 then return k end
+        end
+    end
+    return REOPEN_KEY_DEFAULT
+end
 
 local getNowSeconds = PZRolePlayingShared.getNowSeconds
 local applyCarryProfile = PZRolePlayingShared.applyCarryProfile
@@ -56,9 +77,10 @@ end
 
 local function onKeyPressed(key)
     if PZRolePlayingShared.DEBUG_TOOLS ~= true then return end
-    if REOPEN_KEY == nil or key ~= REOPEN_KEY then return end
+    local reopenKey = getReopenKey()
+    if reopenKey == nil or key ~= reopenKey then return end
 
-    logClient("debug key pressed key=" .. tostring(key) .. " reopenKey=" .. tostring(REOPEN_KEY))
+    logClient("debug key pressed key=" .. tostring(key) .. " reopenKey=" .. tostring(reopenKey))
 
     if not isSinglePlayerRuntime() then
         logClient("debug key ignored - not single player runtime")

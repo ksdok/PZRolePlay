@@ -1,7 +1,7 @@
 PZRolePlayingShared = PZRolePlayingShared or {}
 
 if PZRolePlayingShared.DEBUG == nil then
-    PZRolePlayingShared.DEBUG = true
+    PZRolePlayingShared.DEBUG = false
 end
 
 if PZRolePlayingShared.VERBOSE_EQUIP_LOGS == nil then
@@ -28,6 +28,12 @@ local CARRY_BASELINE = {
     maxWeight = nil,
 }
 
+-- Fallback de capacité de port. applyCarryProfile active setUnlimitedCarry(true)
+-- pour TOUS les rôles (poids sans impact). Cette table n'est lue que pour
+-- pousser maxWeightBase/maxWeight sur les rôles listés : utile uniquement
+-- comme fallback sur une build où setUnlimitedCarry n'existerait pas, ou
+-- pour afficher une capacité de port plus élevée. Sans effet sur le poids
+-- tant que unlimitedCarry est disponible.
 local ROLE_CARRY_CAPACITY = {
     builder = 90,
     chris = 60,
@@ -38,9 +44,6 @@ local ROLE_CARRY_CAPACITY = {
     mule = 80,
     rambo = 60,
     samourai = 60,
-    -- Poids sans impact (unlimited carry) pour ces rôles.
-    -- Note : applyCarryProfile active désormais unlimitedCarry pour TOUS les
-    -- rôles ; cette table n'ajoute qu'un bonus de maxWeightBase/maxWeight.
     soldat = 60,
     sniper = 60,
     survivaliste = 60,

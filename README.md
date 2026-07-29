@@ -26,6 +26,7 @@ Standalone Project Zomboid mod for role selection at spawn.
 
 - A close button (**X**) is available in the top-right corner of the picker.
 - If the picker is closed manually before a choice, it reopens automatically.
+- A keybind (**K** by default, customizable via the game's Options > Keys menu) reopens the picker to switch role (solo only, gated by `DEBUG_TOOLS`).
 - Once a role is chosen, the picker does not reappear for the current session.
 - In MP, the server remains authoritative on role selection.
 
@@ -80,8 +81,8 @@ Active when Brita's Weapon Pack + Arsenal[26] GunFighter (+ Brita's Armor Pack f
 | Eclaireur | H&K MP7 | Sneak 10, Lightfoot 10, Sprinting 10, Fitness 8 | GEN3 Hooded Tactical Shirts, Striker XT Combat Pants, AN PVS-15 Night Vision Goggles, Coyote Tactical Boots | D3M Chest Rig (Front) |
 | Demolisseur | Model 870 MCS:18"BBL | Strength 8, Axe 8, Aiming 8, Nimble 8 | Quarter Zip Combat Shirts, Striker XT Combat Pants, EOD 9A Heavy Protection Helmet, Coyote Tactical Boots | Military Alice Backpack |
 | Invincible | M249E2 LMG | Aiming 10, Reloading 10, Strength 10, Fitness 10 | FORT Defender 2 Emerald Armor, Quarter Zip Combat Shirts, Striker XT Combat Pants, Military PASGT Helmet | Military Alice Backpack |
-| Mule | Crowbar | Strength 10, Fitness 10, Sprinting 10, Carpentry 4 | Military Field Shirts, Military Field Pants, M1 Helmet, Coyote Tactical Boots, Long Leather Work Gloves | Military Alice Backpack |
-| Builder | Crowbar | Carpentry 10, Electrical 10, MetalWelding 10, Mechanics 10 | Boilersuit | Bag_BigHikingBag |
+| Mule | Crowbar | Strength 10, Fitness 10, Sprinting 10, Carpentry 4 | Military Jumper, Military Pants, M1 Helmet, Tac Boots, Leather Gloves | Military Alice Backpack |
+| Builder | Crowbar | Carpentry 10, Electrical 10, MetalWelding 10, Mechanics 10 | Boilersuit, Tac Boots | Bag_BigHikingBag |
 | Leon Kennedy | M4A1 + VP70 + M870 Police | Aiming 9, Reloading 9, Nimble 8, Sprinting 7 | Combat Jumper, Combat Pants, Tac Boots, Mechanix Pact Gloves, Defender Armor | D3M Chest Rig (Front) |
 | Chris Redfield | SPAS-12 + M29 .44 + AK103 | Strength 10, Fitness 9, Aiming 9, Axe 7 | FAST Ops-Core Helmet, M50 Gas Mask, Defender Armor, Combat Uniform | Military Alice Backpack |
 | Jill Valentine | MP5 + PPK + CZ75 | Aiming 9, Reloading 9, Sneak 8, Nimble 8 | Tactical Cap, Defender Armor, Combat Jumper, Combat Pants, Tac Boots | D3M Chest Rig (Front) |

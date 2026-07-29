@@ -16,7 +16,7 @@ Pouvoir rouvrir le role picker **après** qu'un rôle a été choisi, puis en ap
 
 | Choix | Valeur |
 |---|---|
-| Déclencheur | Touche clavier (défaut : `Keyboard.KEY_K`, modifiable) |
+| Déclencheur | Touche clavier (défaut : `Keyboard.KEY_K`, modifiable via le menu Options > Keys du jeu) |
 | Items au switch | **Clean slate** : vider inventaire + items portés + mains **avant toute mutation d'inventaire** (donc avant la création du sac) |
 | Skills au switch | **Reset des perks/XP** (union des perks utilisés par les rôles) avant d'appliquer celles du nouveau rôle |
 | Carry au switch | **Reset du carry profile** (UnlimitedCarry/MaxWeightBase/MaxWeight → baseline) avant d'appliquer celui du nouveau rôle |
@@ -65,12 +65,31 @@ end
 
 ### 3. Keybind + réouverture — `media/lua/client/PZRolePlayingClient.lua`
 ```lua
-local REOPEN_KEY = Keyboard.KEY_K
+local REOPEN_KEY_NAME = "PZRolePlay: Reopen Role Picker"
+local REOPEN_KEY_DEFAULT = Keyboard.KEY_K
 local debugSwitchPending = false   -- module-local
+
+-- Enregistre la keybind dans le menu Options > Keys (modifiable par le joueur).
+if getCore ~= nil then
+    local core = getCore()
+    if core and core.addKeyBinding then
+        pcall(function() core:addKeyBinding(REOPEN_KEY_NAME, REOPEN_KEY_DEFAULT) end)
+    end
+end
+
+local function getReopenKey()
+    local core = getCore()
+    if core and core.getKey then
+        local k = core:getKey(REOPEN_KEY_NAME)
+        if k and k > 0 then return k end
+    end
+    return REOPEN_KEY_DEFAULT
+end
 
 local function onKeyPressed(key)
     if PZRolePlayingShared.DEBUG_TOOLS ~= true then return end
-    if key ~= REOPEN_KEY then return end
+    local reopenKey = getReopenKey()
+    if key ~= reopenKey then return end
     if not isSinglePlayerRuntime() then return end            -- solo only
     if PZRolePlayingRolePicker.isVisible() then return end
     local player = getPlayer()
@@ -128,7 +147,7 @@ Le clean slate précède donc la création du sac (résout le point 4).
 
 ## Choix de la touche
 
-Défaut : `Keyboard.KEY_K` (constante `REOPEN_KEY` modifiable).
+Défaut : `Keyboard.KEY_K`, enregistré via `getCore():addKeyBinding("PZRolePlay: Reopen Role Picker", KEY_K)` — le joueur peut la rebind dans le menu **Options > Keys** du jeu. La lecture à l'exécution se fait via `getCore():getKey(...)`, avec fallback sur `KEY_K`.
 
 ## Cas limites / risques
 
@@ -142,7 +161,7 @@ Défaut : `Keyboard.KEY_K` (constante `REOPEN_KEY` modifiable).
 ## Fichiers modifiés
 
 - `media/lua/shared/PZRolePlayingShared.lua` : flag `DEBUG_TOOLS` + `clearPlayerLoadout` + `resetPlayerPerks` + `resetCarryProfile` + `buildRolePerkUnion`/`getRolePerkUnion`.
-- `media/lua/client/PZRolePlayingClient.lua` : keybind `onKeyPressed`, `debugSwitchPending`, bypass dans `chooseRoleLocal`, param `opts.force` dans `applyRoleLocally`, reset `debugSwitchPending` à la fermeture sans choix.
+- `media/lua/client/PZRolePlayingClient.lua` : keybind `onKeyPressed` + `addKeyBinding`/`getKey` (configurable via Options > Keys), `debugSwitchPending`, bypass dans `chooseRoleLocal`, param `opts.force` dans `applyRoleLocally`, reset `debugSwitchPending` à la fermeture sans choix.
 
 ## Vérification
 

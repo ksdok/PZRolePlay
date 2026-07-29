@@ -506,7 +506,7 @@ Roles.ROLE_DEFS = {
                 "Base.Glove_Mechanix_Pact",   -- Hands
             },
         },
-        stats = { endurance = 0.6, panic = 0, fatigue = 0 },
+        stats = { endurance = 1, panic = 0, fatigue = 0 },
     },
     samourai = {
         name = "Samourai",
@@ -825,7 +825,7 @@ Roles.ROLE_DEFS = {
                 "Base.Glove_Mechanix_Pact",
             },
         },
-        stats = { endurance = 0.6, panic = 10 },
+        stats = { endurance = 1, panic = 0 },
     },
     invincible = {
         name = "Invincible",
@@ -849,7 +849,7 @@ Roles.ROLE_DEFS = {
             {Perks.Electrical, 10},
             {Perks.Cooking, 10},
             {Perks.PlantScavenging, 10},
-            {Perks.Trapping, 3},
+            {Perks.Trapping, 10},
         },
         items = {
             -- ── Primaire : LMG 5.56 ──
@@ -1011,6 +1011,9 @@ Roles.ROLE_DEFS = {
             {"Base.Bag_BigHikingBag", 1},
             {"Base.Boilersuit", 1},
             {"Base.TinOpener", 1},
+            {"Base.Colt1911", 1},
+            {"Base.45Clip", 2},
+            {"Base.Bullets45", 28},
         },
         bagContents = {
             {"Base.Hammer", 1},
@@ -1041,6 +1044,7 @@ Roles.ROLE_DEFS = {
             bag = "Base.Bag_BigHikingBag",
             clothes = {
                 "Base.Boilersuit",
+                "Base.Tac_Boots",
             },
         },
         stats = { endurance = 1, panic = 0 },
@@ -1111,7 +1115,7 @@ Roles.ROLE_DEFS = {
                 "Base.Armor_Defender",
             },
         },
-        stats = { endurance = 0.5, panic = 0, fatigue = 0 },
+        stats = { endurance = 1, panic = 0, fatigue = 0 },
     },
     chris = {
         name = "Chris Redfield",
@@ -1180,7 +1184,7 @@ Roles.ROLE_DEFS = {
                 "Base.Glove_Mechanix_Pact",
             },
         },
-        stats = { endurance = 0.3, panic = 0, fatigue = 0 },
+        stats = { endurance = 1, panic = 0, fatigue = 0 },
     },
     jill = {
         name = "Jill Valentine",
@@ -1248,7 +1252,7 @@ Roles.ROLE_DEFS = {
                 "Base.Glove_Mechanix_Pact",
             },
         },
-        stats = { endurance = 0.5, panic = 0, fatigue = 0 },
+        stats = { endurance = 1, panic = 0, fatigue = 0 },
     },
     civil = {
         name = "Civil",
