@@ -81,6 +81,9 @@ Roles.ROLE_DEFS = {
             {Perks.Lightfoot, 3},
             {Perks.Nimble, 9},
             {Perks.Sprinting, 5},
+            {Perks.Mechanics, 6},
+            {Perks.Electrical, 3},
+            {Perks.Doctor, 3},
         },
         items = {
             {"Base.M4A1", 1},
@@ -114,6 +117,7 @@ Roles.ROLE_DEFS = {
             {"Base.Torch", 1},
             {"Base.Battery", 1},
             {"Base.TinnedSoup", 2},
+            {"Base.FirstAidKit", 1},
         },
         equipped = {
             primary = "Base.M4A1",
@@ -141,6 +145,8 @@ Roles.ROLE_DEFS = {
             {Perks.Trapping, 3},
             {Perks.Reloading, 6},
             {Perks.Aiming, 6},
+            {Perks.Mechanics, 4},
+            {Perks.Electrical, 4},
         },
         items = {
             {"Base.PPK", 1},
@@ -168,6 +174,7 @@ Roles.ROLE_DEFS = {
             {"Base.Torch", 1},
             {"Base.Battery", 1},
             {"Base.TinnedBeans", 2},
+            {"Base.FirstAidKit", 1},
         },
         equipped = {
             primary = "Base.PPK",
@@ -208,7 +215,8 @@ Roles.ROLE_DEFS = {
             {"Base.Screwdriver", 1},
             {"Base.Map", 1},
             {"Base.Bandage", 3},
-            {"Base.TinnedSoup", 2},
+            {"Base.TinnedSoup", 6},
+            {"Base.FirstAidKit", 1},
         },
         equipped = {
             primary = "Base.Hammer",
@@ -256,6 +264,7 @@ Roles.ROLE_DEFS = {
             {"Base.PillsVitamins", 2},
             {"Base.Antibiotics", 2},
             {"Base.TinnedSoup", 2},
+            {"Base.FirstAidKit", 2},
         },
         equipped = {
             primary = "Base.KitchenKnife",
@@ -277,7 +286,7 @@ Roles.ROLE_DEFS = {
             {Perks.Strength, 10},
             {Perks.LongBlunt, 5},
             {Perks.Carpentry, 3},
-            {Perks.Trapping, 3},
+            {Perks.Trapping, 7},
             {Perks.Aiming, 8},
             {Perks.Reloading, 9},
             {Perks.SmallBlade, 4},
@@ -285,6 +294,9 @@ Roles.ROLE_DEFS = {
             {Perks.Lightfoot, 3},
             {Perks.Nimble, 9},
             {Perks.Sprinting, 7},
+            {Perks.Doctor, 6},
+            {Perks.Mechanics, 8},
+            {Perks.Electrical, 4},
         },
         items = {
             {"Base.Axe", 1},
@@ -312,7 +324,8 @@ Roles.ROLE_DEFS = {
             {"Base.45Clip", 2},
             {"Base.Bullets45", 20},
             {"Base.Bandage", 4},
-            {"Base.TinnedBeans", 2},
+            {"Base.TinnedBeans", 6},
+            {"Base.FirstAidKit", 1},
         },
         equipped = {
             primary = "Base.Axe",
@@ -332,16 +345,17 @@ Roles.ROLE_DEFS = {
         skills = {
             {Perks.Aiming, 10},
             {Perks.Reloading, 8},
-            {Perks.Sneak, 6},
+            {Perks.Sneak, 9},
             {Perks.Strength, 7},
             {Perks.Fitness, 4},
             {Perks.Carpentry, 3},
             {Perks.Trapping, 3},
             {Perks.Nimble, 9},
+            {Perks.Lightfoot, 6},
         },
         items = {
             {"Base.M40A3", 1},
-            {"Base.308Bullets", 60},
+            {"Base.308Bullets", 80},
             {"Base.Sight_6xELCAN", 1},
             {"Base.Suppressor_Rifle", 1},
             {"Base.Revolver_Long_357", 1},
@@ -365,6 +379,7 @@ Roles.ROLE_DEFS = {
             {"Base.Bullets357", 18},
             {"Base.Bandage", 3},
             {"Base.TinnedSoup", 2},
+            {"Base.FirstAidKit", 1},
         },
         equipped = {
             primary = "Base.M40A3",
@@ -391,6 +406,9 @@ Roles.ROLE_DEFS = {
             {Perks.Strength, 9},
             {Perks.Fitness, 9},
             {Perks.Sprinting, 7},
+            {Perks.Doctor, 4},
+            {Perks.Mechanics, 3},
+            {Perks.Electrical, 3},
         },
         items = {
             {"Base.PPK", 1},
@@ -420,6 +438,7 @@ Roles.ROLE_DEFS = {
             {"Base.Suppressor_Pistol", 1},
             {"Base.Bandage", 3},
             {"Base.GranolaBar", 10},
+            {"Base.FirstAidKit", 1},
         },
         equipped = {
             primary = "Base.PPK",
@@ -449,6 +468,7 @@ Roles.ROLE_DEFS = {
             {Perks.Maintenance, 4},
             {Perks.Doctor, 4},
             {Perks.Electrical, 3},
+            {Perks.Mechanics, 3},
         },
         items = {
             -- ── Primaire : SMG 9 mm suppressé (MP5SD6) ──
@@ -488,10 +508,11 @@ Roles.ROLE_DEFS = {
             {"Base.ShotgunShells", 20},
             {"Base.PipeBomb", 1},
             {"Base.Bandage", 3},
-            {"Base.TinnedBeans", 1},
-            {"Base.TinnedSoup", 1},
+            {"Base.TinnedBeans", 4},
+            {"Base.TinnedSoup", 4},
             {"Base.Battery", 2},
             {"Base.Torch", 1},
+            {"Base.FirstAidKit", 1},
         },
         equipped = {
             primary = "Base.MP5SD6_Fixed",
@@ -529,11 +550,12 @@ Roles.ROLE_DEFS = {
             {"Base.Bag_D3M", 1},
             {"Base.TinOpener", 1},
             {"Base.GranolaBar", 5},
+            {"Base.FirstAidKit", 1},
         },
         bagContents = {
             {"Base.Machete", 1},
             {"Base.Bandage", 3},
-            {"Base.TinnedBeans", 2},
+            {"Base.TinnedBeans", 6},
         },
         equipped = {
             primary = "Base.Katana",
@@ -551,8 +573,8 @@ Roles.ROLE_DEFS = {
         name = "Geek",
         skills = {
             {Perks.Electrical, 10},
-            {Perks.Carpentry, 7},
-            {Perks.Mechanics, 6},
+            {Perks.Carpentry, 10},
+            {Perks.Mechanics, 10},
             {Perks.Cooking, 3},
             {Perks.Strength, 3},
             {Perks.Trapping, 9},
@@ -568,15 +590,16 @@ Roles.ROLE_DEFS = {
             {"Base.Bandage", 2},
             {"Base.WaterBottleFull", 1},
             {"Base.Bag_NormalHikingBag", 1},
-            {"Base.GranolaBar", 2},
+            {"Base.GranolaBar", 6},
             {"Base.TinOpener", 1},
         },
         bagContents = {
             {"Base.ElectronicsScrap", 5},
-            {"Base.DuctTape", 2},
-            {"Base.Wire", 2},
+            {"Base.DuctTape", 4},
+            {"Base.Wire", 4},
             {"Base.Bandage", 2},
             {"Base.GranolaBar", 2},
+            {"Base.FirstAidKit", 1},
         },
         equipped = {
             primary = "Base.Screwdriver",
@@ -628,7 +651,8 @@ Roles.ROLE_DEFS = {
             {"Base.Bullets357", 18},
             {"Base.TrapMouse", 2},
             {"Base.Bandage", 3},
-            {"Base.TinnedBeans", 2},
+            {"Base.TinnedBeans", 4},
+            {"Base.FirstAidKit", 1},
         },
         equipped = {
             primary = "Base.HuntingRifle",
@@ -667,7 +691,8 @@ Roles.ROLE_DEFS = {
         bagContents = {
             {"Base.Extinguisher", 1},
             {"Base.Bandage", 5},
-            {"Base.TinnedSoup", 2},
+            {"Base.TinnedSoup", 6},
+            {"Base.FirstAidKit", 1},
         },
         equipped = {
             primary = "Base.Axe",
@@ -704,8 +729,9 @@ Roles.ROLE_DEFS = {
             {"Base.TinOpener", 1},
         },
         bagContents = {
-            {"Base.GranolaBar", 2},
+            {"Base.GranolaBar", 6},
             {"Base.Bandage", 3},
+            {"Base.FirstAidKit", 1},
         },
         equipped = {
             primary = "Base.Machete",
@@ -730,6 +756,8 @@ Roles.ROLE_DEFS = {
             {Perks.Carpentry, 3},
             {Perks.Trapping, 3},
             {Perks.Reloading, 6},
+            {Perks.Electrical, 6},
+            {Perks.Mechanics, 6},
         },
         items = {
             {"Base.MP7", 1},
@@ -758,7 +786,8 @@ Roles.ROLE_DEFS = {
             {"Base.Torch", 1},
             {"Base.Battery", 1},
             {"Base.Bandage", 2},
-            {"Base.GranolaBar", 2},
+            {"Base.GranolaBar", 4},
+            {"Base.FirstAidKit", 1},
         },
         equipped = {
             primary = "Base.MP7",
@@ -776,11 +805,11 @@ Roles.ROLE_DEFS = {
     demolisseur = {
         name = "Demolisseur",
         skills = {
-            {Perks.Strength, 8},
-            {Perks.Fitness, 6},
+            {Perks.Strength, 9},
+            {Perks.Fitness, 9},
             {Perks.Axe, 8},
             {Perks.LongBlunt, 5},
-            {Perks.Aiming, 8},
+            {Perks.Aiming, 9},
             {Perks.Carpentry, 3},
             {Perks.Trapping, 3},
             {Perks.Nimble, 8},
@@ -812,7 +841,8 @@ Roles.ROLE_DEFS = {
             {"Base.Molotov", 5},
             {"Base.Lighter", 1},
             {"Base.Bandage", 4},
-            {"Base.TinnedBeans", 2},
+            {"Base.TinnedBeans", 5},
+            {"Base.FirstAidKit", 1},
         },
         equipped = {
             primary = "Base.M870_MCS",
@@ -906,8 +936,9 @@ Roles.ROLE_DEFS = {
             {"Base.Map", 1},
             {"Base.Torch", 1},
             {"Base.Battery", 2},
-            {"Base.TinnedBeans", 2},
-            {"Base.TinnedSoup", 2},
+            {"Base.TinnedBeans", 10},
+            {"Base.TinnedSoup", 10},
+            {"Base.FirstAidKit", 1},
         },
         equipped = {
             primary = "Base.M249",
@@ -956,6 +987,7 @@ Roles.ROLE_DEFS = {
             {"Base.TinnedSoup", 3},
             {"Base.TinOpener", 1},
             {"Base.PetrolCan", 1},
+            {"Base.FirstAidKit", 3},
         },
         equipped = {
             primary = "Base.Crowbar",
@@ -1038,6 +1070,7 @@ Roles.ROLE_DEFS = {
             {"Base.Bandage", 5},
             {"Base.TinnedBeans", 3},
             {"Base.TinnedSoup", 3},
+            {"Base.FirstAidKit", 5},
         },
         equipped = {
             primary = "Base.Crowbar",
@@ -1062,6 +1095,8 @@ Roles.ROLE_DEFS = {
             {Perks.SmallBlade, 5},
             {Perks.Sneak, 5},
             {Perks.Doctor, 3},
+            {Perks.Mechanics, 4},
+            {Perks.Electrical, 4},
         },
         items = {
             {"Base.M4A1", 1},
@@ -1103,6 +1138,7 @@ Roles.ROLE_DEFS = {
             {"Base.TinnedBeans", 1},
             {"Base.TinnedSoup", 1},
             {"Base.Crackers", 1},
+            {"Base.FirstAidKit", 1},
         },
         equipped = {
             primary = "Base.M4A1",
@@ -1130,6 +1166,8 @@ Roles.ROLE_DEFS = {
             {Perks.LongBlunt, 5},
             {Perks.Doctor, 3},
             {Perks.Maintenance, 3},
+            {Perks.Mechanics, 4},
+            {Perks.Electrical, 4},
         },
         items = {
             {"Base.SPAS12_Fixed", 1},
@@ -1170,6 +1208,7 @@ Roles.ROLE_DEFS = {
             {"Base.TinnedSoup", 1},
             {"Base.Crackers", 1},
             {"Base.Battery", 2},
+            {"Base.FirstAidKit", 1},
         },
         equipped = {
             primary = "Base.SPAS12_Fixed",
@@ -1200,6 +1239,7 @@ Roles.ROLE_DEFS = {
             {Perks.SmallBlade, 5},
             {Perks.Electrical, 4},
             {Perks.Doctor, 3},
+            {Perks.Mechanics, 4},
         },
         items = {
             {"Base.MP5_Stock", 1},
@@ -1226,6 +1266,7 @@ Roles.ROLE_DEFS = {
             {"Base.Crackers", 1},
             {"Base.Apple", 1},
             {"Base.Bag_D3M", 1},
+            {"Base.FirstAidKit", 1},
         },
         bagContents = {
             {"Base.9mmClip", 3},
@@ -1281,6 +1322,7 @@ Roles.ROLE_DEFS = {
             {"Base.GranolaBar", 2},
             {"Base.Torch", 1},
             {"Base.Battery", 1},
+            {"Base.FirstAidKit", 1},
         },
         equipped = {
             primary = "Base.KitchenKnife",
