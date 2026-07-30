@@ -82,7 +82,7 @@ Roles.ROLE_DEFS = {
             {Perks.Nimble, 9},
             {Perks.Sprinting, 5},
             {Perks.Mechanics, 6},
-            {Perks.Electrical, 3},
+            {Perks.Electricity, 3},
             {Perks.Doctor, 3},
         },
         items = {
@@ -146,7 +146,7 @@ Roles.ROLE_DEFS = {
             {Perks.Reloading, 6},
             {Perks.Aiming, 6},
             {Perks.Mechanics, 4},
-            {Perks.Electrical, 4},
+            {Perks.Electricity, 4},
         },
         items = {
             {"Base.PPK", 1},
@@ -194,7 +194,7 @@ Roles.ROLE_DEFS = {
             {Perks.Carpentry, 8},
             {Perks.Cooking, 6},
             {Perks.Mechanics, 6},
-            {Perks.Electrical, 6},
+            {Perks.Electricity, 6},
             {Perks.PlantScavenging, 6},
             {Perks.Strength, 5},
             {Perks.Trapping, 3},
@@ -296,7 +296,7 @@ Roles.ROLE_DEFS = {
             {Perks.Sprinting, 7},
             {Perks.Doctor, 6},
             {Perks.Mechanics, 8},
-            {Perks.Electrical, 4},
+            {Perks.Electricity, 4},
         },
         items = {
             {"Base.Axe", 1},
@@ -408,7 +408,7 @@ Roles.ROLE_DEFS = {
             {Perks.Sprinting, 7},
             {Perks.Doctor, 4},
             {Perks.Mechanics, 3},
-            {Perks.Electrical, 3},
+            {Perks.Electricity, 3},
         },
         items = {
             {"Base.PPK", 1},
@@ -467,7 +467,7 @@ Roles.ROLE_DEFS = {
             {Perks.SmallBlade, 6},
             {Perks.Maintenance, 4},
             {Perks.Doctor, 4},
-            {Perks.Electrical, 3},
+            {Perks.Electricity, 3},
             {Perks.Mechanics, 3},
         },
         items = {
@@ -572,7 +572,7 @@ Roles.ROLE_DEFS = {
     geek = {
         name = "Geek",
         skills = {
-            {Perks.Electrical, 10},
+            {Perks.Electricity, 10},
             {Perks.Carpentry, 10},
             {Perks.Mechanics, 10},
             {Perks.Cooking, 3},
@@ -756,7 +756,7 @@ Roles.ROLE_DEFS = {
             {Perks.Carpentry, 3},
             {Perks.Trapping, 3},
             {Perks.Reloading, 6},
-            {Perks.Electrical, 6},
+            {Perks.Electricity, 6},
             {Perks.Mechanics, 6},
         },
         items = {
@@ -876,7 +876,7 @@ Roles.ROLE_DEFS = {
             {Perks.Doctor, 10},
             {Perks.Carpentry, 10},
             {Perks.Mechanics, 10},
-            {Perks.Electrical, 10},
+            {Perks.Electricity, 10},
             {Perks.Cooking, 10},
             {Perks.PlantScavenging, 10},
             {Perks.Trapping, 10},
@@ -1006,7 +1006,7 @@ Roles.ROLE_DEFS = {
         name = "Builder",
         skills = {
             {Perks.Carpentry, 10},
-            {Perks.Electrical, 10},
+            {Perks.Electricity, 10},
             {Perks.MetalWelding, 10},
             {Perks.Mechanics, 10},
             {Perks.Tailoring, 10},
@@ -1096,7 +1096,7 @@ Roles.ROLE_DEFS = {
             {Perks.Sneak, 5},
             {Perks.Doctor, 3},
             {Perks.Mechanics, 4},
-            {Perks.Electrical, 4},
+            {Perks.Electricity, 4},
         },
         items = {
             {"Base.M4A1", 1},
@@ -1167,7 +1167,7 @@ Roles.ROLE_DEFS = {
             {Perks.Doctor, 3},
             {Perks.Maintenance, 3},
             {Perks.Mechanics, 4},
-            {Perks.Electrical, 4},
+            {Perks.Electricity, 4},
         },
         items = {
             {"Base.SPAS12_Fixed", 1},
@@ -1237,7 +1237,7 @@ Roles.ROLE_DEFS = {
             {Perks.Fitness, 5},
             {Perks.Strength, 5},
             {Perks.SmallBlade, 5},
-            {Perks.Electrical, 4},
+            {Perks.Electricity, 4},
             {Perks.Doctor, 3},
             {Perks.Mechanics, 4},
         },
