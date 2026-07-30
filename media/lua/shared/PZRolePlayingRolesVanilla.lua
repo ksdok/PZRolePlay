@@ -71,7 +71,7 @@ Roles.ROLE_DEFS = {
             {Perks.Fitness, 5},
             {Perks.Axe, 4},
             {Perks.SmallBlade, 4},
-            {Perks.Carpentry, 3},
+            {Perks.Woodwork, 3},
             {Perks.Trapping, 3},
         },
         items = {
@@ -110,7 +110,7 @@ Roles.ROLE_DEFS = {
             {Perks.Sprinting, 6},
             {Perks.LongBlunt, 4},
             {Perks.Strength, 3},
-            {Perks.Carpentry, 3},
+            {Perks.Woodwork, 3},
             {Perks.Trapping, 3},
         },
         items = {
@@ -139,7 +139,7 @@ Roles.ROLE_DEFS = {
     local_ = {
         name = "Local",
         skills = {
-            {Perks.Carpentry, 6},
+            {Perks.Woodwork, 6},
             {Perks.Cooking, 6},
             {Perks.Mechanics, 4},
             {Perks.Electricity, 4},
@@ -177,7 +177,7 @@ Roles.ROLE_DEFS = {
             {Perks.Strength, 3},
             {Perks.Fitness, 4},
             {Perks.SmallBlade, 4},
-            {Perks.Carpentry, 3},
+            {Perks.Woodwork, 3},
             {Perks.Trapping, 3},
         },
         items = {
@@ -217,7 +217,7 @@ Roles.ROLE_DEFS = {
             {Perks.Axe, 8},
             {Perks.LongBlade, 6},
             {Perks.Sprinting, 4},
-            {Perks.Carpentry, 3},
+            {Perks.Woodwork, 3},
             {Perks.Trapping, 3},
         },
         items = {
@@ -248,7 +248,7 @@ Roles.ROLE_DEFS = {
             {Perks.Sneak, 6},
             {Perks.Strength, 4},
             {Perks.Fitness, 4},
-            {Perks.Carpentry, 3},
+            {Perks.Woodwork, 3},
             {Perks.Trapping, 3},
         },
         items = {
@@ -286,7 +286,7 @@ Roles.ROLE_DEFS = {
             {Perks.Nimble, 8},
             {Perks.Fitness, 7},
             {Perks.Strength, 5},
-            {Perks.Carpentry, 3},
+            {Perks.Woodwork, 3},
             {Perks.Trapping, 3},
         },
         items = {
@@ -313,7 +313,7 @@ Roles.ROLE_DEFS = {
         name = "Geek",
         skills = {
             {Perks.Electricity, 8},
-            {Perks.Carpentry, 5},
+            {Perks.Woodwork, 5},
             {Perks.Mechanics, 4},
             {Perks.Cooking, 3},
             {Perks.Strength, 3},
@@ -349,7 +349,7 @@ Roles.ROLE_DEFS = {
             {Perks.Trapping, 8},
             {Perks.Aiming, 6},
             {Perks.Sneak, 6},
-            {Perks.Carpentry, 4},
+            {Perks.Woodwork, 4},
             {Perks.Cooking, 5},
         },
         items = {
@@ -383,7 +383,7 @@ Roles.ROLE_DEFS = {
             {Perks.Fitness, 7},
             {Perks.Axe, 7},
             {Perks.LongBlunt, 5},
-            {Perks.Carpentry, 3},
+            {Perks.Woodwork, 3},
             {Perks.Trapping, 3},
         },
         items = {
@@ -415,7 +415,7 @@ Roles.ROLE_DEFS = {
             {Perks.Lightfoot, 7},
             {Perks.Strength, 4},
             {Perks.SmallBlade, 4},
-            {Perks.Carpentry, 3},
+            {Perks.Woodwork, 3},
             {Perks.Trapping, 3},
         },
         items = {
@@ -444,7 +444,7 @@ Roles.ROLE_DEFS = {
             {Perks.Aiming, 5},
             {Perks.Fitness, 5},
             {Perks.SmallBlade, 5},
-            {Perks.Carpentry, 3},
+            {Perks.Woodwork, 3},
             {Perks.Trapping, 3},
         },
         items = {
@@ -478,7 +478,7 @@ Roles.ROLE_DEFS = {
             {Perks.Aiming, 4},
             {Perks.Electricity, 8},
             {Perks.Mechanics, 7},
-            {Perks.Carpentry, 3},
+            {Perks.Woodwork, 3},
             {Perks.Trapping, 3},
         },
         items = {
@@ -528,12 +528,18 @@ Roles.ROLE_DEFS = {
             {Perks.LongBlunt, 10},
             {Perks.SmallBlunt, 10},
             {Perks.Doctor, 10},
-            {Perks.Carpentry, 10},
+            {Perks.Woodwork, 10},
             {Perks.Mechanics, 10},
             {Perks.Electricity, 10},
             {Perks.Cooking, 10},
             {Perks.PlantScavenging, 10},
             {Perks.Trapping, 3},
+            {Perks.Farming, 10},
+            {Perks.MetalWelding, 10},
+            {Perks.Tailoring, 10},
+            {Perks.Fishing, 10},
+            {Perks.Spear, 10},
+            {Perks.Maintenance, 10},
         },
         items = {
             {"Base.AssaultRifle", 1},
@@ -587,7 +593,7 @@ Roles.ROLE_DEFS = {
             {Perks.Strength, 10},
             {Perks.Fitness, 7},
             {Perks.Sprinting, 10},
-            {Perks.Carpentry, 4},
+            {Perks.Woodwork, 4},
             {Perks.Trapping, 3},
         },
         items = {
@@ -618,7 +624,7 @@ Roles.ROLE_DEFS = {
     builder = {
         name = "Builder",
         skills = {
-            {Perks.Carpentry, 10},
+            {Perks.Woodwork, 10},
             {Perks.Electricity, 10},
             {Perks.MetalWelding, 10},
             {Perks.Mechanics, 10},
@@ -871,7 +877,7 @@ Roles.ROLE_DEFS = {
             {Perks.Sneak, 1},
             {Perks.Lightfoot, 1},
             {Perks.Nimble, 1},
-            {Perks.Carpentry, 3},
+            {Perks.Woodwork, 3},
             {Perks.Trapping, 3},
         },
         items = {
